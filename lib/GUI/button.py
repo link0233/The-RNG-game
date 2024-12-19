@@ -25,8 +25,8 @@ class Button:
             self.rect.y + (self.rect.height - self.text_surface.get_height()) // 2,
         ))
 
-    def handle_event(self):
-        for event in pygame.event.get():
+    def handle_event(self,events):
+        for event in events:
             if event.type == pygame.MOUSEMOTION:
                 # 檢查滑鼠是否在按鈕範圍內
                 if self.rect.collidepoint(event.pos):

@@ -10,6 +10,6 @@ class quitButton(Button):
         self.screen = screen
 
     def update(self):
-        onHandle = self.handle_event()
+        onHandle = self.handle_event(self.screen.event)
         if onHandle :
             self.screen.quit()
