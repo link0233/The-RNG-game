@@ -12,7 +12,7 @@ class screen():
         pygame.font.init()
         self.screen = pygame.display.set_mode(SCREENSIZE)
         self.clock = pygame.time.Clock()
-        self.key = JsonEncryptor("./saves/key.key")
+        self.key = JsonEncryptor("./saves/open.rng")
 
         #create objects
         self.quitButton :quitButton= quitButton(self)
@@ -52,11 +52,11 @@ class screen():
 
     def load(self):
         #讀取物品
-        itemData = self.key.decrypt_file_to_dict("./saves/item.json")
+        itemData = self.key.decrypt_file_to_dict("./saves/item.rng")
         self.item.itemData = itemData
         print(itemData)
 
     def save(self):
         #物品存檔
         self.key.new_key()
-        self.key.encrypt_dict_to_file(self.item.itemData,"./saves/item.json")
+        self.key.encrypt_dict_to_file(self.item.itemData,"./saves/item.rng")
