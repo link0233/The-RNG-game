@@ -105,28 +105,32 @@ class rollUI:
 
     def update(self):
         ifRoll = self.rollbutton.handle_event(self.screen.event)
-        if ifRoll:        #確定抽到的物品
-            get = self.roll.roll()
-            rollitemlist = []
-            bestitem = "common"
-            for item in self.items:
-                itemluck = self.items[item]
-                if get>itemluck:
-                    bestitem = item
-                if itemluck> get//2 and itemluck<=get:
-                    rollitemlist.append(item)
+        if ifRoll:  
+            self.Roll()      
+        
+    def Roll(self):
+        #確定抽到的物品
+        get = self.roll.roll()
+        rollitemlist = []
+        bestitem = "common"
+        for item in self.items:
+            itemluck = self.items[item]
+            if get>itemluck:
+                bestitem = item
+            if itemluck> get//2 and itemluck<=get:
+                rollitemlist.append(item)
 
-                # print((rollitemlist,get))
+            # print((rollitemlist,get))
 
-            if rollitemlist == []:
-                itemget = bestitem
-            else:
-                itemget = rollitemlist[random.randint(0,len(rollitemlist)-1)]
+        if rollitemlist == []:
+            itemget = bestitem
+        else:
+            itemget = rollitemlist[random.randint(0,len(rollitemlist)-1)]
 
-            # 加入得到的物品至清單中
-            if itemget in self.screen.item.itemData["item"]:
-                self.screen.item.itemData["item"][itemget] += 1
-            else:
-                self.screen.item.itemData["item"][itemget] = 1
+        # 加入得到的物品至清單中
+        if itemget in self.screen.item.itemData["item"]:
+            self.screen.item.itemData["item"][itemget] += 1
+        else:
+            self.screen.item.itemData["item"][itemget] = 1
 
-            self.text_surface = FONT.render(f"You get:{itemget} ", True, (0,0,0))
+        self.text_surface = FONT.render(f"You get:{itemget} ", True, (0,0,0))

@@ -38,6 +38,9 @@ class screen():
         for event in self.event:
             if event.type == pygame.QUIT:
                 self.quit()
+
+        if AUTOROLL:
+            self.roll.Roll()
         
         self.clock.tick(60)
     
