@@ -71,12 +71,24 @@ class rollUI:
         self.text_surface = FONT.render(f"click roll to roll", True, (0,0,0))
 
         self.items = {
-            "common" : 2,
-            "uncommon": 3,
-            "rare"    : 4,
-            "veryRare": 10,
-            "epic"    : 100,
-            "1K"      : 1000
+            "common"      : 2,
+            "uncommon"    : 3,
+            "rare"        : 4,
+            "one6"        : 6,
+            "veryRare"    : 10,
+            "rock"        : 12,
+            "miku"        : 39,
+            "epic"        : 100,
+            "pi-1"        : 314,
+            "1K"          : 1000,
+            "mikumiku"    : 3939,
+            "pi-2"        : 31415,
+            "mikumikumiku": 393939,
+            "6阿"         : 666666,
+            "lengerdary"  : 100000,
+            "drogun"      : 375000,
+            "pi-3"        : 3141592,
+            "The Void"    : 99999999
         }
         
 
@@ -104,11 +116,17 @@ class rollUI:
                 if itemluck> get//2 and itemluck<=get:
                     rollitemlist.append(item)
 
-                print((rollitemlist,get))
+                # print((rollitemlist,get))
 
             if rollitemlist == []:
                 itemget = bestitem
             else:
                 itemget = rollitemlist[random.randint(0,len(rollitemlist)-1)]
+
+            # 加入得到的物品至清單中
+            if itemget in self.screen.item.itemData["item"]:
+                self.screen.item.itemData["item"][itemget] += 1
+            else:
+                self.screen.item.itemData["item"][itemget] = 1
 
             self.text_surface = FONT.render(f"You get:{itemget} ", True, (0,0,0))

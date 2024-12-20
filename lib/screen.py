@@ -1,8 +1,10 @@
 import pygame
 from config import *
 
+from lib.key import *
 from lib.GUI.quitButton import *
 from lib.Roll.roll import *
+from lib.item.item import *
 
 class screen():
     def __init__(self):
@@ -10,10 +12,15 @@ class screen():
         pygame.font.init()
         self.screen = pygame.display.set_mode(SCREENSIZE)
         self.clock = pygame.time.Clock()
+        self.key = JsonEncryptor("./saves/key.key")
 
         #create objects
-        self.quitButton = quitButton(self)
+        self.quitButton :quitButton= quitButton(self)
         self.roll : rollUI = rollUI(self)
+        self.item :item   = item(self)
+
+        #load
+        self.load()
         
     def draw(self):
         self.screen.fill(SCREEN_BGCOLOR)
@@ -36,5 +43,17 @@ class screen():
     
 
     def quit(self): 
+        self.save()
         pygame.quit()
         import sys ; sys.exit()
+
+    def load(self):
+        #讀取物品
+        itemData = self.key.decrypt_file_to_dict("./saves/item.json")
+        self.item.itemData = itemData
+        print(itemData)
+
+    def save(self):
+        #物品存檔
+        self.key.new_key()
+        self.key.encrypt_dict_to_file(self.item.itemData,"./saves/item.json")
