@@ -2,6 +2,9 @@ import pygame
 import random
 
 from lib.Roll.rollbutton import *
+from lib.Roll.autoRollButton import  *
+from lib.functions.RateLimitedFunction import *
+from lib.functions.functions import format_to_two_decimal_places
 
 class roll:
     def __init__(self):
@@ -69,6 +72,9 @@ class rollUI:
         arial = pygame.font.match_font('arial')
         FONT = pygame.font.Font( arial,36)
         self.text_surface = FONT.render(f"click roll to roll", True, (0,0,0))
+        self.timeToRun_surface = FONT.render("0s", True, (0,0,0))
+
+        self.rollDelay = 3 #等待3秒抽一次
 
         self.items = {
             "common"      : 2,
@@ -91,22 +97,32 @@ class rollUI:
             "The Void"    : 99999999
         }
         
-
         self.roll :roll  = roll()
         self.rollbutton : rollbutton = rollbutton(self.screen)
+        self.autoRollButton : autoRollButton = autoRollButton(self.screen)
+        self.RollTimeRate : RateLimitedFunction = RateLimitedFunction(self.rollDelay,self.rollbutton.ifRoll)
 
     def draw(self):
         self.rollbutton.draw(self.screen.screen)
+        self.autoRollButton.draw(self.screen.screen)
         self.rect = self.text_surface.get_rect()
         self.screen.screen.blit(self.text_surface, (
             (-self.rect.width + SCREENSIZEX)//2,
             SCREENSIZEY//2
         ))
+        self.screen.screen.blit(self.timeToRun_surface,self.timeToRun_Rect)
 
     def update(self):
-        ifRoll = self.rollbutton.handle_event(self.screen.event)
-        if ifRoll:  
-            self.Roll()      
+        #更興按鈕狀態
+        self.rollbutton.update()
+        self.autoRollButton.update()
+
+        #更興剩餘時間狀態
+        self.timeToRun_surface = FONT.render(format_to_two_decimal_places(self.RollTimeRate.get_timeToRun()) + "s", True, (0,0,0))
+        self.timeToRun_Rect = self.timeToRun_surface.get_rect()
+        self.timeToRun_Rect.center = (self.rollbutton.rect.centerx,self.rollbutton.rect.centery - SCREENSIZEY//20) #至於抽取按鈕下方
+ 
+        self.RollTimeRate.execute(self.Roll)       #抽
         
     def Roll(self):
         #確定抽到的物品

@@ -1,5 +1,6 @@
-from lib.key import *
+import json
 
-key = JsonEncryptor("./saves/key.key")
-print(key.decrypt_file_to_dict("./saves/item.json"))
+with open("./saves/item.rng","r") as f:
+    itemData = json.load(f)
+print(itemData)
 input()

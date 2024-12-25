@@ -1,7 +1,8 @@
 import pygame
+import json
 from config import *
 
-from lib.key import *
+#from lib.key import *
 from lib.GUI.quitButton import *
 from lib.Roll.roll import *
 from lib.item.item import *
@@ -12,7 +13,7 @@ class screen():
         pygame.font.init()
         self.screen = pygame.display.set_mode(SCREENSIZE)
         self.clock = pygame.time.Clock()
-        self.key = JsonEncryptor("./saves/open.rng")
+        #self.key = JsonEncryptor("./saves/open.rng")
 
         #create objects
         self.quitButton :quitButton= quitButton(self)
@@ -38,9 +39,6 @@ class screen():
         for event in self.event:
             if event.type == pygame.QUIT:
                 self.quit()
-
-        if AUTOROLL:
-            self.roll.Roll()
         
         self.clock.tick(60)
     
@@ -52,11 +50,16 @@ class screen():
 
     def load(self):
         #讀取物品
-        itemData = self.key.decrypt_file_to_dict("./saves/item.rng")
+        # itemData = self.key.decrypt_file_to_dict("./saves/item.rng")
+        # self.item.itemData = itemData
+        with open("./saves/item.rng","r") as f:
+            itemData = json.load(f)
         self.item.itemData = itemData
         print(itemData)
 
     def save(self):
         #物品存檔
-        self.key.new_key()
-        self.key.encrypt_dict_to_file(self.item.itemData,"./saves/item.rng")
+        # self.key.new_key()
+        # self.key.encrypt_dict_to_file(self.item.itemData,"./saves/item.rng")
+        with open("./saves/item.rng","w") as f:
+            json.dump(self.item.itemData,f)
