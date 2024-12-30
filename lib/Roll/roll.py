@@ -10,7 +10,7 @@ class roll:
     def __init__(self):
         self.rollList = []
         self.rollCounts = [0,0,0,0,0]
-        self.luckboost = 1
+        self.luckboost = 3
         for i in range(len(self.rollCounts)):#隨機起始值
             self.rollCounts[i] = random.randint(0,1023)
 
@@ -86,7 +86,9 @@ class rollUI:
             "miku"        : 39,
             "epic"        : 100,
             "pi-1"        : 314,
+            "happy new year!!!": 500,
             "1K"          : 1000,
+            "happy 2025 new year !!!" : 2025,
             "mikumiku"    : 3939,
             "pi-2"        : 31415,
             "mikumikumiku": 393939,

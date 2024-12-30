@@ -13,7 +13,12 @@ class screen():
         pygame.font.init()
         self.screen = pygame.display.set_mode(SCREENSIZE)
         self.clock = pygame.time.Clock()
-        #self.key = JsonEncryptor("./saves/open.rng")
+
+        #back ground
+        self.bg_image = pygame.image.load("./images/background.jpg").convert_alpha()
+        self.bg_rect  = self.bg_image.get_rect()
+        self.bg_rect.x = 0
+        self.bg_rect.y = 0
 
         #create objects
         self.quitButton :quitButton= quitButton(self)
@@ -25,7 +30,8 @@ class screen():
         
     def draw(self):
         self.screen.fill(SCREEN_BGCOLOR)
-        self.quitButton.draw(self.screen)
+        self.screen.blit(self.bg_image,self.bg_rect)
+        self.quitButton.draw()
         self.roll.draw()
         
         pygame.display.update()
@@ -50,8 +56,6 @@ class screen():
 
     def load(self):
         #讀取物品
-        # itemData = self.key.decrypt_file_to_dict("./saves/item.rng")
-        # self.item.itemData = itemData
         with open("./saves/item.rng","r") as f:
             itemData = json.load(f)
         self.item.itemData = itemData
@@ -59,7 +63,5 @@ class screen():
 
     def save(self):
         #物品存檔
-        # self.key.new_key()
-        # self.key.encrypt_dict_to_file(self.item.itemData,"./saves/item.rng")
         with open("./saves/item.rng","w") as f:
             json.dump(self.item.itemData,f)
