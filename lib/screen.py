@@ -5,7 +5,7 @@ from config import *
 #from lib.key import *
 from lib.GUI.quitButton import *
 from lib.Roll.roll import *
-from lib.item.item import *
+from lib.inventory.inventory import *
 
 class screen():
     def __init__(self):
@@ -23,7 +23,7 @@ class screen():
         #create objects
         self.quitButton :quitButton= quitButton(self)
         self.roll : rollUI = rollUI(self)
-        self.item :item   = item(self)
+        self.inventory :inventory   = inventory(self)
 
         #load
         self.load()
@@ -58,10 +58,10 @@ class screen():
         #讀取物品
         with open("./saves/item.rng","r") as f:
             itemData = json.load(f)
-        self.item.itemData = itemData
+        self.inventory.itemData = itemData
         print(itemData)
 
     def save(self):
         #物品存檔
         with open("./saves/item.rng","w") as f:
-            json.dump(self.item.itemData,f)
+            json.dump(self.inventory.itemData,f)

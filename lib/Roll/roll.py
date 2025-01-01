@@ -10,7 +10,7 @@ class roll:
     def __init__(self):
         self.rollList = []
         self.rollCounts = [0,0,0,0,0]
-        self.luckboost = 3
+        self.luckboost = 1
         for i in range(len(self.rollCounts)):#隨機起始值
             self.rollCounts[i] = random.randint(0,1023)
 
@@ -71,33 +71,33 @@ class rollUI:
 
         arial = pygame.font.match_font('arial')
         FONT = pygame.font.Font( arial,36)
-        self.text_surface = FONT.render(f"click roll to roll", True, (0,0,0))
+        self.no_show_image = FONT.render(f"click roll to roll", True, (0,0,0))
+        self.show_image = None
         self.timeToRun_surface = FONT.render("0s", True, (0,0,0))
 
         self.rollDelay = 3 #等待3秒抽一次
 
-        self.items = {
-            "common"      : 2,
-            "uncommon"    : 3,
-            "rare"        : 4,
-            "one6"        : 6,
-            "veryRare"    : 10,
-            "rock"        : 12,
-            "miku"        : 39,
-            "epic"        : 100,
-            "pi-1"        : 314,
-            "happy new year!!!": 500,
-            "1K"          : 1000,
-            "happy 2025 new year !!!" : 2025,
-            "mikumiku"    : 3939,
-            "pi-2"        : 31415,
-            "mikumikumiku": 393939,
-            "6阿"         : 666666,
-            "lengerdary"  : 100000,
-            "drogun"      : 375000,
-            "pi-3"        : 3141592,
-            "The Void"    : 99999999
-        }
+        # self.items = {
+        #     "common"      : 2,         v
+        #     # "uncommon"    : 4,       v
+        #     # "one6"        : 6,
+        #     # "rare"        : 8,
+        #     # "rock"        : 12,      v
+        #     # "miku"        : 39,
+        #     # "veryRare"    : 50,
+        #     # "epic"        : 100,
+        #       "gold"        : 200,
+        #     # "pi-1"        : 314,
+        #     # "1K"          : 1000,
+        #     # "mikumiku"    : 3939,
+        #     # "pi-2"        : 31415,
+        #     # "mikumikumiku": 393939,
+        #     # "666666"      : 666666,
+        #     # "lengerdary"  : 100000,
+        #     # "drogun"      : 375000,
+        #     # "pi-3"        : 3141592,
+        #     # "The Void"    : 99999999
+        # }
         
         self.roll :roll  = roll()
         self.rollbutton : rollbutton = rollbutton(self.screen)
@@ -105,13 +105,20 @@ class rollUI:
         self.RollTimeRate : RateLimitedFunction = RateLimitedFunction(self.rollDelay,self.rollbutton.ifRoll)
 
     def draw(self):
+        #繪製按鈕
         self.rollbutton.draw(self.screen.screen)
         self.autoRollButton.draw(self.screen.screen)
-        self.rect = self.text_surface.get_rect()
-        self.screen.screen.blit(self.text_surface, (
-            (-self.rect.width + SCREENSIZEX)//2,
-            SCREENSIZEY//2
-        ))
+
+        #繪製抽到的東西
+        if self.show_image == None :
+            self.rect = self.no_show_image.get_rect()
+            self.screen.screen.blit(self.no_show_image, (
+                (-self.rect.width + SCREENSIZEX)//2,
+                SCREENSIZEY//2
+            ))
+        else:
+            self.screen.inventory.item_list[self.show_image].draw()
+
         self.screen.screen.blit(self.timeToRun_surface,self.timeToRun_Rect)
 
     def update(self):
@@ -131,24 +138,27 @@ class rollUI:
         get = self.roll.roll()
         rollitemlist = []
         bestitem = "common"
-        for item in self.items:
-            itemluck = self.items[item]
+        for item in self.screen.inventory.item_list:
+            itemluck = self.screen.inventory.item_list[item].rarity
             if get>itemluck:
                 bestitem = item
             if itemluck> get//2 and itemluck<=get:
                 rollitemlist.append(item)
 
-            # print((rollitemlist,get))
+        print((rollitemlist,get))
 
         if rollitemlist == []:
-            itemget = bestitem
+            itemget = self.screen.inventory.item_list[bestitem].name
+            print(True)
         else:
-            itemget = rollitemlist[random.randint(0,len(rollitemlist)-1)]
+            itemget = self.screen.inventory.item_list[   rollitemlist[random.randint(0,len(rollitemlist)-1)]   ].name
 
         # 加入得到的物品至清單中
-        if itemget in self.screen.item.itemData["item"]:
-            self.screen.item.itemData["item"][itemget] += 1
+        if itemget in self.screen.inventory.itemData["item"]:
+            self.screen.inventory.itemData["item"][itemget] += 1
         else:
-            self.screen.item.itemData["item"][itemget] = 1
+            self.screen.inventory.itemData["item"][itemget] = 1
 
-        self.text_surface = FONT.render(f"You get:{itemget} ", True, (0,0,0))
+        self.show_image = itemget
+        print(itemget)
+        #self.text_surface = FONT.render(f"You get:{itemget.name} ", True, (0,0,0))

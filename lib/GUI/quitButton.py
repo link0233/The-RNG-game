@@ -14,5 +14,7 @@ class quitButton(ImageButton):
     def update(self):
         self.update_hover_state(self._screen.event)
         self.check_clicked(self._screen.event)
-        print(self.is_hovered)
-        if self.is_clicked : import sys ; sys.exit() #退出
+        #print(self.is_hovered)
+        if self.is_clicked : 
+            self._screen.quit()
+
