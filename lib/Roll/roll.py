@@ -10,7 +10,7 @@ class roll:
     def __init__(self):
         self.rollList = []
         self.rollCounts = [0,0,0,0,0]
-        self.luckboost = 100
+        self.luckboost = 1
         for i in range(len(self.rollCounts)):#隨機起始值
             self.rollCounts[i] = random.randint(0,1023)
 
