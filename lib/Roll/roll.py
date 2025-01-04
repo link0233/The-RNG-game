@@ -10,7 +10,7 @@ class roll:
     def __init__(self):
         self.rollList = []
         self.rollCounts = [0,0,0,0,0]
-        self.luckboost = 1
+        self.luckboost = 100
         for i in range(len(self.rollCounts)):#隨機起始值
             self.rollCounts[i] = random.randint(0,1023)
 
@@ -81,14 +81,15 @@ class rollUI:
         #     "common"      : 2,         v
         #     # "uncommon"    : 4,       v
         #     # "one6"        : 6,
-        #     # "rare"        : 8,
+        #     # "rare"        : 8,       v
         #     # "rock"        : 12,      v
         #     # "miku"        : 39,
-        #     # "veryRare"    : 50,
-        #     # "epic"        : 100,
+        #     # "veryRare"    : 50,      v
+        #     # "epic"        : 100,     v
         #       "gold"        : 200,
         #     # "pi-1"        : 314,
         #     # "1K"          : 1000,
+            #   "line"        : 1500,    v
         #     # "mikumiku"    : 3939,
         #     # "pi-2"        : 31415,
         #     # "mikumikumiku": 393939,
@@ -117,7 +118,7 @@ class rollUI:
                 SCREENSIZEY//2
             ))
         else:
-            self.screen.inventory.item_list[self.show_image].draw()
+            self.screen.inventory.item_list[self.show_image].draw_rolled()
 
         self.screen.screen.blit(self.timeToRun_surface,self.timeToRun_Rect)
 
@@ -154,10 +155,10 @@ class rollUI:
             itemget = self.screen.inventory.item_list[   rollitemlist[random.randint(0,len(rollitemlist)-1)]   ].name
 
         # 加入得到的物品至清單中
-        if itemget in self.screen.inventory.itemData["item"]:
-            self.screen.inventory.itemData["item"][itemget] += 1
+        if itemget in self.screen.inventory.inventoryData["item"]:
+            self.screen.inventory.inventoryData["item"][itemget] += 1
         else:
-            self.screen.inventory.itemData["item"][itemget] = 1
+            self.screen.inventory.inventoryData["item"][itemget] = 1
 
         self.show_image = itemget
         print(itemget)

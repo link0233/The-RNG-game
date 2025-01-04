@@ -33,6 +33,8 @@ class screen():
         self.screen.blit(self.bg_image,self.bg_rect)
         self.quitButton.draw()
         self.roll.draw()
+
+        self.inventory.draw()
         
         pygame.display.update()
 
@@ -41,6 +43,7 @@ class screen():
 
         self.quitButton.update()
         self.roll.update()
+        self.inventory.update()
         #quit
         for event in self.event:
             if event.type == pygame.QUIT:
@@ -56,12 +59,12 @@ class screen():
 
     def load(self):
         #讀取物品
-        with open("./saves/item.rng","r") as f:
-            itemData = json.load(f)
-        self.inventory.itemData = itemData
-        print(itemData)
+        with open("./saves/item.json","r") as f:
+            inventoryData = json.load(f)
+        self.inventory.inventoryData = inventoryData
+        print(inventoryData)
 
     def save(self):
         #物品存檔
-        with open("./saves/item.rng","w") as f:
-            json.dump(self.inventory.itemData,f)
+        with open("./saves/item.json","w") as f:
+            json.dump(self.inventory.inventoryData,f)
