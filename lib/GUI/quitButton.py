@@ -12,9 +12,10 @@ class quitButton(ImageButton):
         self._screen = screen
 
     def update(self):
-        self.update_hover_state(self._screen.event)
-        self.check_clicked(self._screen.event)
-        #print(self.is_hovered)
-        if self.is_clicked : 
-            self._screen.quit()
+        if self._screen.scene == 0 :
+            self.update_hover_state(self._screen.event)
+            self.check_clicked(self._screen.event)
+            #print(self.is_hovered)
+            if self.is_clicked : 
+                self._screen.quit()
 

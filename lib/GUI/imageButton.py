@@ -51,6 +51,7 @@ class ImageButton:
         self.is_clicked = False
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if self.rect.collidepoint(event.pos):
-                    self.is_clicked = True  # 如果按鈕被點擊，返回 True
+                if event.button == 1:
+                    if self.rect.collidepoint(event.pos):
+                        self.is_clicked = True  # 如果按鈕被點擊，返回 True
                 

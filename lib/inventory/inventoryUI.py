@@ -21,9 +21,11 @@ class inventoryUI:
         self.rect.x = 0; self.rect.y = 0
 
         self.openButton :openinventoryButton = openinventoryButton(screen)
+        self.closeButton:closeinventoryButton = closeinventoryButton(screen)
 
     def draw(self):
-        if self.open:
+        #if self.open:
+        if self.screen.scene == 1:
             self.screen.screen.blit(self.image,self.rect)
             itemData = self.screen.inventory.inventoryData["item"]
             itemlist = self.screen.inventory.item_list
@@ -33,16 +35,21 @@ class inventoryUI:
                 else:
                     itemlist[item].draw_itemList(0,False,self.move_value)
 
-        self.openButton.draw(self.screen.screen)
+        if self.screen.scene == 0 :self.openButton.draw(self.screen.screen)
+        if self.screen.scene == 1 : self.closeButton.draw(self.screen.screen)
 
     def update(self):
-        ifclick = self.openButton.handle_event(self.screen.event)
-        if ifclick: self.open = not self.open
+        #處理開啟和關閉
+        if self.openButton.handle_event(self.screen.event) and self.screen.scene == 0: 
+            self.screen.scene = 1
+
+        if self.closeButton.handle_event(self.screen.event) and self.screen.scene == 1:
+            self.screen.scene = 0
         
         for event in self.screen.event:
             #移動物品藍
             if event.type == pygame.MOUSEWHEEL:
-                if self.open :#只有開啟時使用
+                if self.screen.scene == 1:#只有開啟時使用
                     self.move_value += event.y * self.move_step 
                     #調整溢出直
                     if self.move_value > 0 :             self.move_value = 0

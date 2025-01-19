@@ -10,7 +10,7 @@ class roll:
     def __init__(self):
         self.rollList = []
         self.rollCounts = [0,0,0,0,0]
-        self.luckboost = 6
+        self.luckboost = 1
         for i in range(len(self.rollCounts)):#隨機起始值
             self.rollCounts[i] = random.randint(0,1023)
 
@@ -107,25 +107,27 @@ class rollUI:
 
     def draw(self):
         #繪製按鈕
-        self.rollbutton.draw(self.screen.screen)
-        self.autoRollButton.draw(self.screen.screen)
+        if self.screen.scene == 0:
+            self.rollbutton.draw(self.screen.screen)
+            self.autoRollButton.draw(self.screen.screen)
 
-        #繪製抽到的東西
-        if self.show_image == None :
-            self.rect = self.no_show_image.get_rect()
-            self.screen.screen.blit(self.no_show_image, (
-                (-self.rect.width + SCREENSIZEX)//2,
-                SCREENSIZEY//2
-            ))
-        else:
-            self.screen.inventory.item_list[self.show_image].draw_rolled()
+            #繪製抽到的東西
+            if self.show_image == None :
+                self.rect = self.no_show_image.get_rect()
+                self.screen.screen.blit(self.no_show_image, (
+                    (-self.rect.width + SCREENSIZEX)//2,
+                    SCREENSIZEY//2
+                ))
+            else:
+                self.screen.inventory.item_list[self.show_image].draw_rolled()
 
-        self.screen.screen.blit(self.timeToRun_surface,self.timeToRun_Rect)
+            self.screen.screen.blit(self.timeToRun_surface,self.timeToRun_Rect)
 
     def update(self):
-        #更興按鈕狀態
-        self.rollbutton.update()
-        self.autoRollButton.update()
+        #在主畫面時更興按鈕狀態
+        if self.screen.scene == 0:
+            self.rollbutton.update()
+            self.autoRollButton.update()
 
         #更興剩餘時間狀態
         self.timeToRun_surface = FONT.render(format_to_two_decimal_places(self.RollTimeRate.get_timeToRun()) + "s", True, (0,0,0))

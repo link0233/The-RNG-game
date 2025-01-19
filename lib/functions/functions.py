@@ -12,3 +12,5 @@ def format_to_two_decimal_places(number_str):
         return formatted_number
     except ValueError:
         return "輸入無效，請提供有效的數字字符串。"
+    
+def returnTrue(): return True

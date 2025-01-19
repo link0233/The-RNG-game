@@ -6,6 +6,8 @@ from config import *
 from lib.GUI.quitButton import *
 from lib.Roll.roll import *
 from lib.inventory.inventory import *
+from lib.functions.RateLimitedFunction import RateLimitedFunction
+from lib.functions.functions import returnTrue
 
 class screen():
     def __init__(self):
@@ -13,6 +15,11 @@ class screen():
         pygame.font.init()
         self.screen = pygame.display.set_mode(SCREENSIZE)
         self.clock = pygame.time.Clock()
+
+        #場景
+        self.scene = 0
+        # 主畫面 : 0
+        # 背包   : 1
 
         #back ground
         self.bg_image = pygame.image.load("./images/background.jpg").convert_alpha()
@@ -24,6 +31,7 @@ class screen():
         self.quitButton :quitButton= quitButton(self)
         self.roll : rollUI = rollUI(self)
         self.inventory :inventory   = inventory(self)
+        self.autoSave : RateLimitedFunction = RateLimitedFunction(10,returnTrue)
 
         #load
         self.load()
@@ -31,9 +39,8 @@ class screen():
     def draw(self):
         self.screen.fill(SCREEN_BGCOLOR)
         self.screen.blit(self.bg_image,self.bg_rect)
-        self.quitButton.draw()
+        if self.scene == 0:self.quitButton.draw()
         self.roll.draw()
-
         self.inventory.draw()
         
         pygame.display.update()
@@ -41,9 +48,11 @@ class screen():
     def update(self):
         self.event = pygame.event.get()
 
-        self.quitButton.update()
+        if self.scene == 0 : self.quitButton.update()
         self.roll.update()
         self.inventory.update()
+
+        self.autoSave.execute(self.save)
         #quit
         for event in self.event:
             if event.type == pygame.QUIT:
