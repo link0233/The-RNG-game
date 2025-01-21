@@ -8,7 +8,7 @@ class item:
         rarity : 該物品的稀有度
         rarity_count : 該物品稀有度排名
         image_path : 該物品的圖案路徑
-        item_type : 物品型態，分為"normal item" 以及 "special item"
+        item_type : 物品型態，分為"normalItem" 以及 "specialItem" 以及 "extraItem"
         screen : 繪製的視窗
         """
         self.name = name
@@ -17,6 +17,7 @@ class item:
         self.rolled_image_path = image_path
         self.item_type = item_type
         self.screen = screen
+        self.canRoll = True
 
         pygame.font.init()
         self.font = pygame.font.Font(None,50)
@@ -51,6 +52,22 @@ class item:
         self.not_get_rect.center   = (self.item_image_w//2,self.item_image_h//2)
         self.rarity_rect           = (self.item_name_image_w + self.rarity_image_w//2 ,self.item_image_h//2)
 
+    def checkCanRoll(self):
+        """
+        更興是否可以抽取的狀態
+        extraItem恆不能抽
+        specialItem 只能有一個
+        normalItem 無上限
+        可以直接回傳是否能抽
+        """
+        self.canRoll = True
+        if self.item_type == "extraItem" : self.canRoll = False ; return False
+        if self.item_type == "normalItem": return True
+        if self.item_type == "specialItem":
+            if self.name in self.screen.inventory.inventoryData[self.item_type]:
+                self.canRoll = False
+                return False#有就不能
+            else: return True 
         
     def draw_rolled(self):
         self.screen.screen.blit(self.rolled_image,self.rolled_rect)

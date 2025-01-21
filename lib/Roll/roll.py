@@ -143,7 +143,8 @@ class rollUI:
         bestitem = "common"
         for item in self.screen.inventory.item_list:
             itemluck = self.screen.inventory.item_list[item].rarity
-            if get>itemluck:
+            canRoll = self.screen.inventory.item_list[item].checkCanRoll()
+            if get>itemluck and canRoll:
                 bestitem = item
             if itemluck> get//2 and itemluck<=get:
                 rollitemlist.append(item)
@@ -155,12 +156,13 @@ class rollUI:
             print(True)
         else:
             itemget = self.screen.inventory.item_list[   rollitemlist[random.randint(0,len(rollitemlist)-1)]   ].name
+        getItemType = self.screen.inventory.item_list[  itemget ].item_type
 
         # 加入得到的物品至清單中
-        if itemget in self.screen.inventory.inventoryData["item"]:
-            self.screen.inventory.inventoryData["item"][itemget] += 1
+        if itemget in self.screen.inventory.inventoryData[getItemType]:
+            self.screen.inventory.inventoryData[getItemType][itemget] += 1
         else:
-            self.screen.inventory.inventoryData["item"][itemget] = 1
+            self.screen.inventory.inventoryData[getItemType][itemget] = 1
 
         self.show_image = itemget
         print(itemget)
