@@ -36,3 +36,9 @@ class RateLimitedFunction:
             return 0
         else:
             return _time
+        
+    def reset(self):
+        """
+        重新設定啟用時間
+        """
+        self.last_run = time.time()

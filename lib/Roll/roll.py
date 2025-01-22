@@ -146,14 +146,14 @@ class rollUI:
             canRoll = self.screen.inventory.item_list[item].checkCanRoll()
             if get>itemluck and canRoll:
                 bestitem = item
-            if itemluck> get//2 and itemluck<=get:
+            if itemluck> get//2 and itemluck<=get and canRoll:
                 rollitemlist.append(item)
 
         print((rollitemlist,get))
 
         if rollitemlist == []:
             itemget = self.screen.inventory.item_list[bestitem].name
-            print(True)
+            #print(True)
         else:
             itemget = self.screen.inventory.item_list[   rollitemlist[random.randint(0,len(rollitemlist)-1)]   ].name
         getItemType = self.screen.inventory.item_list[  itemget ].item_type
@@ -165,5 +165,8 @@ class rollUI:
             self.screen.inventory.inventoryData[getItemType][itemget] = 1
 
         self.show_image = itemget
+        #確定之後撥放動畫
         print(itemget)
+        self.screen.inventory.item_list[  itemget ] . play_animation()
+        self.RollTimeRate.reset()
         #self.text_surface = FONT.render(f"You get:{itemget.name} ", True, (0,0,0))

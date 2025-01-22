@@ -14,7 +14,15 @@
 ###### 如真想改的話直接從存檔改，如果你要真的完成就感的話，就別改了八，我懶得館
 
 # updates
-# v0.4.1.11
+# v0.4.2 Special Item Update
+1. debug
+    * 解決當存檔空白無法抽的問題
+    * 可重複抽special item
+2. 啟用special item
+3. 興增 1K 和 2025HappyNewYear
+4. 興增動畫
+5. 播放動畫完重新計時
+## v0.4.1.11
 1. 修正錯字
 2. 更改讀取方式
 3. 興增special item 和 extra item(有形態但尚未啟用)
