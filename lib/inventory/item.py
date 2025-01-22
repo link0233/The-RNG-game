@@ -163,6 +163,10 @@ class item:
         """
         #確認是否有被點擊
         clicked = False
+        canShow = False
+        if self.item_type == "normalItem" and self.screen.inventory.ItemUI.scene == 1: canShow = True
+        if self.item_type == "specialItem" and self.screen.inventory.ItemUI.scene == 2: canShow = True
+        
         for event in self.screen.event:
             if event.type == pygame.MOUSEMOTION:
                 # 檢查滑鼠是否在按鈕範圍內
@@ -172,7 +176,7 @@ class item:
                     self.hover_state = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if self.item_rect.collidepoint(event.pos):
+                    if self.item_rect.collidepoint(event.pos) and canShow:
                         clicked = True
                         self.screen.inventory.ItemUI.hide_allBeside()
                         self.beside_show_state = True
