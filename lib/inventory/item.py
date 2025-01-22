@@ -1,6 +1,8 @@
 import pygame
 from config import *
 
+from lib.GUI.imageButton import *
+
 class item:
     def __init__(self,name:str , rarity: int ,rarity_count: int,image_path: str, item_type: str,screen):
         """
@@ -18,6 +20,8 @@ class item:
         self.item_type = item_type
         self.screen = screen
         self.canRoll = True
+        self.hover_state = False
+        self.beside_show_state = False
 
         pygame.font.init()
         self.font = pygame.font.Font(None,50)
@@ -31,8 +35,9 @@ class item:
 
         #顯示在物品欄中的
         if self.item_type == "normalItem":
-            self.item_image_w      = SCREENSIZEX//4*3
-            self.item_image_h      = SCREENSIZEY//5
+            #主要的
+            self.item_image_w      = SCREENSIZEX//5*3
+            self.item_image_h      = SCREENSIZEY//7
             self.item_name_image_w = self.item_image_w//5*2
             self.rarity_image_w    = self.item_image_w //5 * 2
             self.count_w           = self.item_image_w //5
@@ -52,10 +57,33 @@ class item:
             self.item_name_rect.center = (self.item_name_image_w//2,self.item_image_h//2)
             self.not_get_rect.center   = (self.item_image_w//2,self.item_image_h//2)
             self.rarity_rect.center    = (self.item_name_image_w + self.rarity_image_w//2 ,self.item_image_h//2)
+            #旁邊的
+            #大小
+            self.beside_w = SCREENSIZEX - self.item_image_w
+            self.beside_h = SCREENSIZEY
+            original_size = self.rolled_image.get_size()
+            self.beside_showImage_w = self.beside_w
+            scale_factor = self.beside_showImage_w / original_size[0]
+            self.beside_showImage_h = original_size[1] * scale_factor
+
+            self.beside_image = pygame.Surface((self.beside_w,self.beside_h))
+            self.beside_image.set_colorkey((0,0,0))
+            self.beside_showImage = pygame.transform.smoothscale(self.rolled_image,(self.beside_showImage_w,self.beside_showImage_h))
+            self.beside_showImage.set_colorkey((0,0,0))
+
+            self.beside_rect = self.beside_image.get_rect()
+            self.beside_rect.x = self.item_image_w
+            self.beside_rect.y = 0
+            self.beside_showImage_rect = self.beside_showImage.get_rect()
+            self.beside_showImage_rect.x = 0
+            self.beside_showImage_rect.centery = SCREENSIZEY//4
+            
+            self.beside_image.blit(self.beside_showImage,self.beside_showImage_rect)
 
         if self.item_type == "specialItem":
+            # 主要的
             # 大小
-            self.item_image_w      = SCREENSIZEX//2
+            self.item_image_w      = SCREENSIZEX//3
             self.item_image_h      = SCREENSIZEY//6
             self.item_name_image_h = self.item_image_h//4-5
             self.rarity_image_h    = self.item_image_h//4-5
@@ -74,7 +102,38 @@ class item:
             self.item_rect.y           = 0
             self.item_name_rect.center = (self.item_image_w//4,self.item_image_h//2)
             self.not_get_rect.center   = (self.item_image_w//2,self.item_image_h//2)
-            self.rarity_rect           = (self.item_image_w//4*3,self.item_image_h//2)
+            self.rarity_rect.center    = (self.item_image_w//4*3,self.item_image_h//2)
+            #旁邊的
+            #大小
+            self.beside_w = SCREENSIZEX - self.item_image_w*2
+            self.beside_h = SCREENSIZEY
+            original_size = self.rolled_image.get_size()
+            self.beside_showImage_w = self.beside_w
+            scale_factor = self.beside_showImage_w / original_size[0]
+            self.beside_showImage_h = original_size[1] * scale_factor
+
+            self.beside_image = pygame.Surface((self.beside_w,self.beside_h))
+            self.beside_image.set_colorkey((0,0,0))
+            self.beside_showImage = pygame.transform.smoothscale(self.rolled_image,(self.beside_showImage_w,self.beside_showImage_h))
+            self.beside_showImage.set_colorkey((0,0,0))
+
+            self.beside_rect = self.beside_image.get_rect()
+            self.beside_rect.x = self.item_image_w*2
+            self.beside_rect.y = 0
+            self.beside_showImage_rect = self.beside_showImage.get_rect()
+            self.beside_showImage_rect.x = 0
+            self.beside_showImage_rect.centery = SCREENSIZEY//4
+            #波放動畫按鈕
+            self.playAnimationButton = playAnimationButton(self.beside_image , self.beside_image,self.beside_w,self.beside_h)
+            
+            self.beside_image.blit(self.beside_showImage,self.beside_showImage_rect)
+
+        self.hover_image = pygame.Surface((self.item_image_w,self.item_image_h))
+        self.hover_image.fill((121, 51, 35))
+        self.hover_image.set_alpha(250)
+        self.hover_rect = self.hover_image.get_rect()
+        self.hover_rect.x = 0
+        self.hover_rect.y = 0
 
     def checkCanRoll(self):
         """
@@ -102,9 +161,27 @@ class item:
         get: 是否有取得
         move: 位移距離
         """
+        #確認是否有被點擊
+        clicked = False
+        for event in self.screen.event:
+            if event.type == pygame.MOUSEMOTION:
+                # 檢查滑鼠是否在按鈕範圍內
+                if self.item_rect.collidepoint(event.pos):
+                    self.hover_state = True
+                else:
+                    self.hover_state = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if self.item_rect.collidepoint(event.pos):
+                        clicked = True
+                        self.screen.inventory.ItemUI.hide_allBeside()
+                        self.beside_show_state = True
+        #繪製
         self.item_image.fill((255,55,55))
         self.item_image.set_colorkey((255,55,55))#清空
-        if self.item_type == "normalItem" and self.screen.inventory.UI.scene == 1:
+
+        if self.item_type == "normalItem" and self.screen.inventory.ItemUI.scene == 1:
+            if self.hover_state: self.item_image.blit(self.hover_image,self.hover_rect)
             if get == False:
                 self.item_image.blit(self.not_get_image,self.not_get_rect)
             else:
@@ -117,18 +194,31 @@ class item:
                 count_rect = count_image.get_rect()
                 count_rect.center = (self.item_name_image_w + self.rarity_image_w + self.count_w//2 ,self.item_image_h//2)
                 self.item_image.blit(count_image , count_rect)
+                #旁邊的
+                if self.beside_show_state : 
+                    self.screen.screen.blit(self.beside_image,self.beside_rect)
+                    
 
             self.item_rect.y           = self.rarity_count * self.item_image_h + move
-        
-        if self.item_type == "specialItem" and self.screen.inventory.UI.scene == 2:
+             
+        if self.item_type == "specialItem" and self.screen.inventory.ItemUI.scene == 2:
+            if self.hover_state: self.item_image.blit(self.hover_image,self.hover_rect)
             if get == False:
                 self.item_image.blit(self.not_get_image,self.not_get_rect)
             if get == True:
                 self.item_image.blit(self.item_name_image,self.item_name_rect)
                 self.item_image.blit(self.rarity_image,self.rarity_rect)
+                #旁邊的
+                if self.beside_show_state : 
+                    
+                    self.playAnimationButton.check_clicked(self.screen.event,(self.item_image_w*2,0))
+                    self.playAnimationButton.update_hover_state(self.screen.event,(self.item_image_w*2,0))
+                    self.playAnimationButton.draw()
+                    if self.playAnimationButton.is_clicked : self.play_animation()
 
-            self.item_rect.y = (self.rarity_count - self.rarity_count%2)//2 * self.item_image_h + move
-            
+                    self.screen.screen.blit(self.beside_image,self.beside_rect)
+
+            self.item_rect.y = (self.rarity_count - self.rarity_count%2)//2 * self.item_image_h + move     
         
         self.screen.screen.blit(self.item_image,self.item_rect)
         
@@ -219,3 +309,23 @@ class item:
         
         self.screen.clock.tick(60)
         pygame.display.update()
+
+class playAnimationButton(ImageButton):
+    def __init__(self,screen,besideImage,besidex,besidey):
+        self.sizex = besidex//2
+        self._screen = screen
+        super().__init__(besideImage,
+                         "./images/button/playAnimation.png",
+                         "./images/button/hover_playAnimation.png",
+                         (besidex//2,besidey//4*3),
+                         60)
+        image_originalScale       = self.image.get_size()
+        hover_image_originalScale = self.hover_image.get_size()
+        image_factor = self.sizex / image_originalScale[0]
+        hover_image_factor = self.sizex / hover_image_originalScale[0]
+        self.image = pygame.transform.smoothscale(self.image,(self.sizex,image_originalScale[1] * image_factor))
+        self.hover_image = pygame.transform.smoothscale(self.hover_image,(self.sizex,hover_image_originalScale[1] * hover_image_factor))
+
+        self.rect = self.image.get_rect()
+        self.rect.centerx = besidex//2
+        self.rect.centery = besidey//4*3

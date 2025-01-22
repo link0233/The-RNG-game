@@ -28,11 +28,11 @@ class ImageButton:
     def draw(self):
         """繪製按鈕"""
         if self.is_hovered:
-            self.screen.blit(self.hover_image, self.rect.topleft)
+            self.screen.blit(self.hover_image, self.rect)
         else:
-            self.screen.blit(self.image, self.rect.topleft)
+            self.screen.blit(self.image, self.rect)
 
-    def update_hover_state(self, events):
+    def update_hover_state(self, events,rect_move = (0,0)):
         """
         更新按鈕的懸停狀態
         :param event : pygame evnet
@@ -40,9 +40,12 @@ class ImageButton:
         # 檢查滑鼠是否在按鈕範圍內
         for event in events:
             if event.type == pygame.MOUSEMOTION:
-                self.is_hovered = self.rect.collidepoint(event.pos)
+                print((event.pos[0] - rect_move[0],event.pos[1] - rect_move[1]))
+                print(self.rect.center)
+                print(rect_move)
+                self.is_hovered = self.rect.collidepoint((event.pos[0] - rect_move[0],event.pos[1] - rect_move[1]))
 
-    def check_clicked(self, events):
+    def check_clicked(self, events,rect_move = (0,0)):
         """
         檢測按鈕是否被點擊
         :param events: Pygame 事件
@@ -52,6 +55,6 @@ class ImageButton:
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if self.rect.collidepoint(event.pos):
+                    if self.rect.collidepoint(event.pos[0] - rect_move[0],event.pos[1] - rect_move[1]):
                         self.is_clicked = True  # 如果按鈕被點擊，返回 True
                 

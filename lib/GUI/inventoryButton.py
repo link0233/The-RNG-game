@@ -2,14 +2,14 @@ import pygame
 from lib.GUI.button import *
 from config import *
 
-class openinventoryButton(Button):
+class openitemButton(Button):
     def __init__(self,screen):
         w = SCREENSIZEX//10
         h = SCREENSIZEY//15
         self.mainScreen = screen
-        super().__init__(0,SCREENSIZEY//2,w,h,"Inventory")
+        super().__init__(0,SCREENSIZEY//2,w,h,"Item")
 
-class closeinventoryButton(Button):
+class closeitemButton(Button):
     def __init__(self,screen):
         self.mainScreen = screen
         w = SCREENSIZEY//10

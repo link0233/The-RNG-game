@@ -1,7 +1,7 @@
 import pygame
 from config import *
 
-from lib.inventory.item import *
+from lib.inventory.item import item
 from lib.inventory.inventoryUI import *
 
 class inventory:
@@ -9,7 +9,7 @@ class inventory:
         self.inventoryData = {"normalItem":{},"specialItem":{},"extraItem":{}}
         self.screen = screen
 
-        self.UI :inventoryUI = inventoryUI(screen)
+        self.ItemUI :ItemUI = ItemUI(screen)
 
         self.item_list  = {
             "common"          : item("common"          ,2          ,0,"./images/items/common.png","normalItem",screen),
@@ -25,7 +25,7 @@ class inventory:
         }
 
     def update(self):
-        self.UI.update()
+        self.ItemUI.update()
 
     def draw(self):
-        self.UI.draw()
+        self.ItemUI.draw()

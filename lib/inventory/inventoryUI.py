@@ -3,7 +3,7 @@ from config import *
 
 from lib.GUI.inventoryButton import *
 
-class inventoryUI:
+class ItemUI:
     def __init__(self,screen):
         self.screen = screen
         self.bgColor = INVENTORY_BGC
@@ -31,9 +31,9 @@ class inventoryUI:
         self.rect = self.image.get_rect()
         self.rect.x = 0; self.rect.y = 0
 
-        self.openButton       :openinventoryButton  = openinventoryButton(screen)
-        self.closeButton      :closeinventoryButton = closeinventoryButton(screen)
-        self.normalButton     :openinventoryButton  = normalButton(screen)
+        self.openButton       :openitemButton  = openitemButton(screen)
+        self.closeButton      :closeitemButton = closeitemButton(screen)
+        self.normalButton     :normalButton  = normalButton(screen)
         self.specialButton    :specialButton        = specialButton(screen)
         self.extraButton      :extraButton          = extraButton(screen)
 
@@ -100,3 +100,7 @@ class inventoryUI:
                         if self.extra_move_value > SCREENSIZEY//10 :         self.extra_move_value = SCREENSIZEY//10
                         if self.extra_move_value < self.normal_move_max : self.extra_move_value = self.extra_move_max
     
+    def hide_allBeside(self):
+        itemlist = self.screen.inventory.item_list
+        for item in self.screen.inventory.item_list:
+            itemlist[item] . beside_show_state = False
