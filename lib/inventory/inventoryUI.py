@@ -55,9 +55,24 @@ class ItemUI:
                 itemlist = self.screen.inventory.item_list
                 for item in itemlist:
                     if item in special_itemData:
-                        itemlist[item].draw_itemList(special_itemData[item],True,self.special_move_value)
+                        if special_itemData[item] >= 1:
+                            itemlist[item].draw_itemList(special_itemData[item],True,self.special_move_value)
+                        else:
+                            itemlist[item].draw_itemList(0,False,self.special_move_value)
                     else:
                         itemlist[item].draw_itemList(0,False,self.special_move_value)
+            
+            if self.scene == 3:
+                extra_itemData = self.screen.inventory.inventoryData["extraItem"]
+                itemlist = self.screen.inventory.item_list
+                for item in itemlist:
+                    if item in extra_itemData:
+                        if extra_itemData[item] >=1:
+                            itemlist[item].draw_itemList(extra_itemData[item],True,self.extra_move_value)
+                        else:
+                            itemlist[item].draw_itemList(0,False,self.extra_move_value)
+                    else:
+                        itemlist[item].draw_itemList(0,False,self.extra_move_value)
 
         if self.screen.scene == 0 :self.openButton.draw(self.screen.screen)
         if self.screen.scene == 1 : 

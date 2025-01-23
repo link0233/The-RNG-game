@@ -21,7 +21,9 @@ class inventory:
             "Line"            : item("Line"            ,1500       ,6,"./images/items/line.png","normalItem",screen),
 
             "1K"              : item("1K"              ,1000       ,0,"./images/items/1K.png","specialItem",screen),
-            "2025HappyNewYear": item("2025HappyNewYear",2025       ,1,"./images/items/2025happynewyear.png","specialItem",screen)
+            "2025HappyNewYear": item("2025HappyNewYear",2025       ,1,"./images/items/2025happynewyear.png","specialItem",screen),
+
+            "100roll"         : item("100roll"         ,0          ,0,"./images/items/100roll.png","extraItem",screen)
         }
 
     def update(self):
@@ -29,3 +31,12 @@ class inventory:
 
     def draw(self):
         self.ItemUI.draw()
+
+    def checkExtraGet(self):
+        """
+        檢查是否有extra item獲得,如有,則回傳其一
+        """
+        for item in self.item_list:
+            if self.item_list[item].checkExtraGet():
+                return item
+        return None

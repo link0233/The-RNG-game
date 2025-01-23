@@ -2,6 +2,7 @@ import pygame
 from config import *
 
 from lib.GUI.imageButton import *
+from lib.functions.functions import draw_text
 
 class item:
     def __init__(self,name:str , rarity: int ,rarity_count: int,image_path: str, item_type: str,screen):
@@ -24,7 +25,11 @@ class item:
         self.beside_show_state = False
 
         pygame.font.init()
-        self.font = pygame.font.Font(None,50)
+        CourierNew = pygame.font.match_font("Tahoma")
+        self.font = pygame.font.Font(CourierNew,40)
+
+        # 創建提示內容
+        if self.name == "100roll" : self.caption = "You roll 100 times !!!!!!!!!"
 
         # 創建圖片
         self.rolled_image = pygame.image.load(image_path).convert_alpha()
@@ -92,6 +97,7 @@ class item:
             self.not_get_image   = self.font.render("???",True,(0,0,0))
             self.rarity_image    = self.font.render(f"1 in {self.rarity}",True,(0,0,0))
             self.item_name_image = self.font.render(self.name,True,(0,0,0))
+            
             #set rect
             self.item_rect        = self.item_image.get_rect()
             self.item_name_rect   = self.item_name_image.get_rect()
@@ -100,9 +106,9 @@ class item:
             #定位
             self.item_rect.x           = (self.rarity_count %2) * self.item_image_w
             self.item_rect.y           = 0
-            self.item_name_rect.center = (self.item_image_w//4,self.item_image_h//2)
+            self.item_name_rect.center = (self.item_image_w//10*3,self.item_image_h//2)
             self.not_get_rect.center   = (self.item_image_w//2,self.item_image_h//2)
-            self.rarity_rect.center    = (self.item_image_w//4*3,self.item_image_h//2)
+            self.rarity_rect.center    = (self.item_image_w//10*8,self.item_image_h//2)
             #旁邊的
             #大小
             self.beside_w = SCREENSIZEX - self.item_image_w*2
@@ -128,6 +134,55 @@ class item:
             
             self.beside_image.blit(self.beside_showImage,self.beside_showImage_rect)
 
+        if self.item_type == "extraItem":
+            # 主要的
+            # 大小
+            self.item_image_w      = SCREENSIZEX//3
+            self.item_image_h      = SCREENSIZEY//6
+            self.item_name_image_h = self.item_image_h//4-5
+            #圖
+            self.item_image      = pygame.Surface((self.item_image_w,self.item_image_h))
+            self.not_get_image   = self.font.render("???",True,(0,0,0))
+            self.item_name_image = self.font.render(self.name,True,(0,0,0))
+            #set rect
+            self.item_rect        = self.item_image.get_rect()
+            self.item_name_rect   = self.item_name_image.get_rect()
+            self.not_get_rect     = self.not_get_image.get_rect()
+            #定位
+            self.item_rect.x           = (self.rarity_count %2) * self.item_image_w
+            self.item_rect.y           = 0
+            self.item_name_rect.center = (self.item_image_w//2,self.item_image_h//2)
+            self.not_get_rect.center   = (self.item_image_w//2,self.item_image_h//2)
+            #旁邊的
+            #大小
+            self.beside_w = SCREENSIZEX - self.item_image_w*2
+            self.beside_h = SCREENSIZEY
+            original_size = self.rolled_image.get_size()
+            self.beside_showImage_w = self.beside_w
+            scale_factor = self.beside_showImage_w / original_size[0]
+            self.beside_showImage_h = original_size[1] * scale_factor
+
+            self.beside_image = pygame.Surface((self.beside_w,self.beside_h))
+            self.beside_image.set_colorkey((0,0,0))
+            self.beside_showImage = pygame.transform.smoothscale(self.rolled_image,(self.beside_showImage_w,self.beside_showImage_h))
+            self.beside_showImage.set_colorkey((0,0,0))
+            self.beside_captionImage = pygame.Surface((self.beside_w,self.beside_h//3))
+            self.beside_captionImage.set_colorkey((0,0,0))
+            draw_text(self.beside_captionImage,self.caption,self.font,(255,255,255),(0,0,self.beside_w,self.beside_h//3),50)
+
+            self.beside_rect = self.beside_image.get_rect()
+            self.beside_rect.x = self.item_image_w*2
+            self.beside_rect.y = 0
+            self.beside_showImage_rect = self.beside_showImage.get_rect()
+            self.beside_showImage_rect.x = 0
+            self.beside_showImage_rect.centery = SCREENSIZEY//4
+            self.beside_caption_rect = self.beside_captionImage.get_rect()
+            self.beside_caption_rect.center = (self.beside_w//2,self.beside_h//2)
+            #波放動畫按鈕
+            self.playAnimationButton = playAnimationButton(self.beside_image , self.beside_image,self.beside_w,self.beside_h)
+            
+            self.beside_image.blit(self.beside_showImage,self.beside_showImage_rect)
+            self.beside_image.blit(self.beside_captionImage,self.beside_caption_rect)
         self.hover_image = pygame.Surface((self.item_image_w,self.item_image_h))
         self.hover_image.fill((121, 51, 35))
         self.hover_image.set_alpha(250)
@@ -151,7 +206,20 @@ class item:
                 self.canRoll = False
                 return False#有就不能
             else: return True 
-        
+
+    def checkExtraGet(self):
+        """
+        回傳此extra item是否獲得，如果獲得，則視為當前抽取物，回傳為bool
+        """
+        if self.item_type != "extraItem": return False
+        if self.name in self.screen.inventory.item_list:
+            if self.screen.inventory.inventoryData["extraItem"][self.name] >= 1:
+                return False
+            elif self.name == "100roll":
+                if self.screen.states.states["rolls"] >= 100:
+                    return True
+                else :return False
+
     def draw_rolled(self):
         self.screen.screen.blit(self.rolled_image,self.rolled_rect)
 
@@ -165,7 +233,8 @@ class item:
         clicked = False
         canShow = False
         if self.item_type == "normalItem" and self.screen.inventory.ItemUI.scene == 1: canShow = True
-        if self.item_type == "specialItem" and self.screen.inventory.ItemUI.scene == 2: canShow = True
+        elif self.item_type == "specialItem" and self.screen.inventory.ItemUI.scene == 2: canShow = True
+        elif self.item_type == "extraItem" and self.screen.inventory.ItemUI.scene == 3: canShow = True
         
         for event in self.screen.event:
             if event.type == pygame.MOUSEMOTION:
@@ -222,7 +291,25 @@ class item:
 
                     self.screen.screen.blit(self.beside_image,self.beside_rect)
 
-            self.item_rect.y = (self.rarity_count - self.rarity_count%2)//2 * self.item_image_h + move     
+            self.item_rect.y = (self.rarity_count - self.rarity_count%2)//2 * self.item_image_h + move    
+
+        if self.item_type == "extraItem" and self.screen.inventory.ItemUI.scene == 3:
+            if self.hover_state: self.item_image.blit(self.hover_image,self.hover_rect)
+            if get == False:
+                self.item_image.blit(self.not_get_image,self.not_get_rect)
+            if get == True:
+                self.item_image.blit(self.item_name_image,self.item_name_rect)
+                #旁邊的
+                if self.beside_show_state : 
+
+                    self.playAnimationButton.check_clicked(self.screen.event,(self.item_image_w*2,0))
+                    self.playAnimationButton.update_hover_state(self.screen.event,(self.item_image_w*2,0))
+                    self.playAnimationButton.draw()
+                    if self.playAnimationButton.is_clicked : self.play_animation()
+
+                    self.screen.screen.blit(self.beside_image,self.beside_rect)
+
+            self.item_rect.y = (self.rarity_count - self.rarity_count%2)//2 * self.item_image_h + move 
         
         self.screen.screen.blit(self.item_image,self.item_rect)
         
@@ -258,6 +345,14 @@ class item:
             self.animation_showText("2025 = 45^2 = (1+2+3+4+5+6+7+8+9)^2",180,Gradient = True , GradientTime= 30)
             self.animation_wait(30)
             self.animation_showText("Good Luck",180,Gradient = True , GradientTime= 30)
+
+        elif self.name == "100roll":
+            self.animation_wait(300)
+            self.animation_showText("WOW You roll 100 times",210,Gradient=True,GradientTime= 60)
+            self.animation_showText("It's must be easy and fast to get",210,Gradient=True,GradientTime= 60)
+            self.animation_showText("It's the first extra item",210,Gradient=True,GradientTime= 60)
+            self.animation_showText("Is it also your first extra item?",210,Gradient=True,GradientTime= 60)
+            self.animation_wait(300)
 
     def animation_showText(self,text:str,time:int ,
                            text_color = (255,255,255),
@@ -305,7 +400,8 @@ class item:
         for _ in range(time): self.UpdateScreenWhenPlayingAnimation()
 
     def UpdateScreenWhenPlayingAnimation(self):
-        for event in self.screen.event:
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 self.screen.save()
                 pygame.quit()

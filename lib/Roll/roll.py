@@ -137,6 +137,14 @@ class rollUI:
         self.RollTimeRate.execute(self.Roll)       #抽
         
     def Roll(self):
+        # 先確認是否有extra item可獲的，如可獲得，則直接獲得
+        getExtra = self.screen.inventory.checkExtraGet()
+        if getExtra != None:
+            self.show_image = getExtra
+            self.screen.inventory.inventoryData["extraItem"][getExtra] = 1
+            self.screen.inventory.item_list[  getExtra ] . play_animation()
+            self.RollTimeRate.reset()
+            return
         #確定抽到的物品
         self.screen.states.states["rolls"] += 1
         get = self.roll.roll()
