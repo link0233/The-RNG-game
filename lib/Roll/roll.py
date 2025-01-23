@@ -138,6 +138,7 @@ class rollUI:
         
     def Roll(self):
         #確定抽到的物品
+        self.screen.states.states["rolls"] += 1
         get = self.roll.roll()
         rollitemlist = []
         bestitem = "common"

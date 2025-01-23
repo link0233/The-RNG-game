@@ -40,9 +40,9 @@ class ImageButton:
         # 檢查滑鼠是否在按鈕範圍內
         for event in events:
             if event.type == pygame.MOUSEMOTION:
-                print((event.pos[0] - rect_move[0],event.pos[1] - rect_move[1]))
-                print(self.rect.center)
-                print(rect_move)
+                # print((event.pos[0] - rect_move[0],event.pos[1] - rect_move[1]))
+                # print(self.rect.center)
+                # print(rect_move)
                 self.is_hovered = self.rect.collidepoint((event.pos[0] - rect_move[0],event.pos[1] - rect_move[1]))
 
     def check_clicked(self, events,rect_move = (0,0)):
