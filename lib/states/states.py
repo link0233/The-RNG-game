@@ -45,7 +45,11 @@ class states:
             self.closeButton.draw(self.screen.screen)
             # 顯示的states
             rollImage = self.statesFont.render(f"total rolls : {self.states["rolls"]}",True,(255,255,255))
-            timeplayImage = self.statesFont.render(f"total playing time : {self.states["playtime"]:.2f}",True,(255,255,255))
+            playtime = self.states["playtime"]
+            s = playtime%60
+            m = (playtime-s) //60 %60
+            h = (playtime-s-m*60) // 3600
+            timeplayImage = self.statesFont.render(f"total playing time : {h:.0f}h {m:.0f}m {s:.2f}s",True,(255,255,255))
 
             rollrect = rollImage.get_rect()
             timeplayrect = timeplayImage.get_rect()
