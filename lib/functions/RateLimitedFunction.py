@@ -10,6 +10,7 @@ class RateLimitedFunction:
         self.interval = interval
         self.condition = condition
         self.last_run = 0
+        self.last_stop = 0
 
     def execute(self, func, *args, **kwargs):
         """
@@ -42,3 +43,16 @@ class RateLimitedFunction:
         重新設定啟用時間
         """
         self.last_run = time.time()
+        
+    def stop(self):
+        """
+        暫停
+        """
+        self.last_stop = time.time()
+
+    def restart(self):
+        """
+        暫停後重新開始
+        """
+        now = time.time()
+        self.last_run += now - self.last_stop

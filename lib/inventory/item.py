@@ -212,16 +212,26 @@ class item:
         回傳此extra item是否獲得，如果獲得，則視為當前抽取物，回傳為bool
         """
         if self.item_type != "extraItem": return False
-        if self.name in self.screen.inventory.item_list:
+        get = False
+        if self.name in self.screen.inventory.inventoryData["extraItem"]:
             if self.screen.inventory.inventoryData["extraItem"][self.name] >= 1:
                 return False
-            elif self.name == "100roll":
+            else : get = True
+        else: get = True
+        if get:
+            if self.name == "100roll":
                 if self.screen.states.states["rolls"] >= 100:
+                    print("a")
                     return True
-                else :return False
+            else :return False
+        return False
 
-    def draw_rolled(self):
-        self.screen.screen.blit(self.rolled_image,self.rolled_rect)
+
+    def draw_rolled(self,movex = 0,movey = 0):
+        show_rect = self.rolled_image.get_rect()
+        show_rect.x = self.rolled_rect.x + movex
+        show_rect.y = self.rolled_rect.y + movey
+        self.screen.screen.blit(self.rolled_image,show_rect)
 
     def draw_itemList(self,count:int ,get:bool ,move:int ):
         """

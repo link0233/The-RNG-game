@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 
 from lib.Roll.rollbutton import *
 from lib.Roll.autoRollButton import  *
@@ -10,7 +11,7 @@ class roll:
     def __init__(self):
         self.rollList = []
         self.rollCounts = [0,0,0,0,0]
-        self.luckboost = 1
+        self.luckboost = 500
         for i in range(len(self.rollCounts)):#隨機起始值
             self.rollCounts[i] = random.randint(0,1023)
 
@@ -104,26 +105,30 @@ class rollUI:
         self.rollbutton : rollbutton = rollbutton(self.screen)
         self.autoRollButton : autoRollButton = autoRollButton(self.screen)
         self.RollTimeRate : RateLimitedFunction = RateLimitedFunction(self.rollDelay,self.rollbutton.ifRoll)
+        self.rollAnimation: rollAnimation = rollAnimation(self.screen)
 
     def draw(self):
         #繪製按鈕
         if self.screen.scene == 0:
             self.rollbutton.draw(self.screen.screen)
             self.autoRollButton.draw(self.screen.screen)
+            self.rollAnimation.draw()
 
-            #繪製抽到的東西
-            if self.show_image == None :
-                self.rect = self.no_show_image.get_rect()
-                self.screen.screen.blit(self.no_show_image, (
-                    (-self.rect.width + SCREENSIZEX)//2,
-                    SCREENSIZEY//2
-                ))
-            else:
-                self.screen.inventory.item_list[self.show_image].draw_rolled()
+            #沒播放動畫時繪製抽到的東西
+            if self.rollAnimation.playing == False:
+                if self.show_image == None :
+                    self.rect = self.no_show_image.get_rect()
+                    self.screen.screen.blit(self.no_show_image, (
+                        (-self.rect.width + SCREENSIZEX)//2,
+                        SCREENSIZEY//2
+                    ))
+                else:
+                    self.screen.inventory.item_list[self.show_image].draw_rolled()
 
             self.screen.screen.blit(self.timeToRun_surface,self.timeToRun_Rect)
 
     def update(self):
+        self.rollAnimation.update()
         #在主畫面時更興按鈕狀態
         if self.screen.scene == 0:
             self.rollbutton.update()
@@ -139,11 +144,13 @@ class rollUI:
     def Roll(self):
         # 先確認是否有extra item可獲的，如可獲得，則直接獲得
         getExtra = self.screen.inventory.checkExtraGet()
+        print(getExtra)
         if getExtra != None:
             self.show_image = getExtra
+            self.rollAnimation.playAnimation(getExtra)
             self.screen.inventory.inventoryData["extraItem"][getExtra] = 1
-            self.screen.inventory.item_list[  getExtra ] . play_animation()
-            self.RollTimeRate.reset()
+            # self.screen.inventory.item_list[  getExtra ] . play_animation()
+            # self.RollTimeRate.reset()
             return
         #確定抽到的物品
         self.screen.states.states["rolls"] += 1
@@ -176,6 +183,82 @@ class rollUI:
         self.show_image = itemget
         #確定之後撥放動畫
         print(itemget)
-        self.screen.inventory.item_list[  itemget ] . play_animation()
-        self.RollTimeRate.reset()
+        self.rollAnimation.playAnimation(itemget)
+        # self.screen.inventory.item_list[  itemget ] . play_animation()
+        # self.RollTimeRate.reset()
         #self.text_surface = FONT.render(f"You get:{itemget.name} ", True, (0,0,0))
+
+class rollAnimation:
+    def __init__(self,screen):
+        self.screen = screen
+        self.roll :roll = roll()
+        #self.item_list = self.screen.inventory.item_list
+
+        self.playing = False
+        self.start_play_time = 0
+        self.rolled : str = None
+        #切換圖片
+        self.start_time_to_next_image  = 0.1
+        self.last_change = 0
+        self.time_to_next_image = 0.05
+        self.time_to_next_image_plus = 0.025
+        #圖片進場特效(由上往下)
+        self.down_Duration = self.time_to_next_image/2
+        self.down_distance = 30
+        self.down_movey = 0
+        self.AnimationPlayTime = 2
+
+        self.showing_image = None
+
+    def playAnimation(self,rolled):
+        self.playing = True
+        self.start_play_time = time.time()
+        self.time_to_next_image = self.start_time_to_next_image
+        self.rolled = rolled
+        self.item_list = self.screen.inventory.item_list
+        self.last_change = 0
+        self.change_image()
+
+    def change_image(self):
+        if self.last_change + self.time_to_next_image >= self.AnimationPlayTime:
+            self.showing_image = self.rolled
+        else:
+            self.roll.luckboost = self.screen.roll.roll.luckboost ** 0.8
+            get = self.showing_image #先設定成相同才會改成正確的
+            while get == self.showing_image:
+                luck = self.roll.roll()
+                cangets = []
+                best = ["common",2]
+                for item in self.item_list:
+                    rarity = self.item_list[item].rarity
+                    if rarity<luck and rarity>luck//2:
+                        cangets.append(item)
+                    elif rarity > best[1] and rarity <=luck:
+                        best = [item,rarity]
+                if cangets == []:
+                    get= best[0]
+                else:
+                    get = cangets[random.randint(0,len(cangets) - 1)]
+            self.showing_image = get
+        self.down_movey = self.down_distance
+
+    def update(self):
+        if self.playing:
+            now = time.time()
+            t = now - self.start_play_time
+            if t - self.last_change >= self.time_to_next_image:
+                self.time_to_next_image += self.time_to_next_image_plus
+                self.last_change = t
+                self.change_image()
+            if t >= self.AnimationPlayTime:
+                self.playing = False
+                self.showing_image = None
+                self.screen.roll.RollTimeRate.stop()
+                self.item_list[self.screen.roll.show_image].play_animation()
+                self.screen.roll.RollTimeRate.restart()
+
+            self.down_movey = -(1.5 ** (-((t - self.last_change)/self.down_Duration)))*self.down_distance
+
+    def draw(self):
+        if self.playing:
+            self.item_list[self.showing_image].draw_rolled(movey = self.down_movey)
