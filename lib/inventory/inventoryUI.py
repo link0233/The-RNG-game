@@ -15,8 +15,8 @@ class ItemUI:
         self.extra_move_value = SCREENSIZEY//10
 
         self.move_step = 75          #物品數輛，反向
-        self.normal_move_max = SCREENSIZEY//5 * 3 * -1      
-        self.special_move_max = SCREENSIZEY//5 * 1 * -1        
+        self.normal_move_max = SCREENSIZEY//5 * 13 * -1      
+        self.special_move_max = SCREENSIZEY//5 * 2 * -1        
         self.extra_move_max = SCREENSIZEY//5 * 1 * -1
 
         #場景

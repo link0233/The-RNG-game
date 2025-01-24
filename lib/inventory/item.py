@@ -29,7 +29,9 @@ class item:
         self.font = pygame.font.Font(CourierNew,40)
 
         # 創建提示內容
-        if self.name == "100roll" : self.caption = "You roll 100 times !!!!!!!!!"
+        if   self.name == "100roll" : self.caption = "You roll 100 times !!!!!!!!!"
+        elif self.name == "10000roll" : self.caption = "You roll 10000 times !!!!!!!!!"
+        elif self.name == "10Htimeplayed" : self.caption = "You played 10H in this game!!"
 
         # 創建圖片
         self.rolled_image = pygame.image.load(image_path).convert_alpha()
@@ -223,6 +225,12 @@ class item:
                 if self.screen.states.states["rolls"] >= 100:
                     print("a")
                     return True
+            if self.name == "10000roll":
+                if self.screen.states.states["rolls"] >= 10000:
+                    return True
+            if self.name == "10Htimeplayed":
+                if self.screen.states.states["playtime"] >= 36000:
+                    return True
             else :return False
         return False
 
@@ -363,6 +371,84 @@ class item:
             self.animation_showText("It's the first extra item",210,Gradient=True,GradientTime= 60)
             self.animation_showText("Is it also your first extra item?",210,Gradient=True,GradientTime= 60)
             self.animation_wait(300)
+
+        elif self.name == "CURV":
+            self.animation_showText("CURV",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_wait(30)
+            self.animation_showText("It's just abbreviation",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("It's full name is commonuncommonrareveryrare",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("yes It's very long",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("and It's rarity also is 2x4x8x50",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+
+        elif self.name == "watermelon":
+            self.animation_showText("OH this is delicious",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("Simple have red and yellow",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("It's can make the juise",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("It's verygood on Summer",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("yes, It's watermelon",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+
+        elif self.name == "error-1":
+            self.animation_showText("jlhgkicjuojvyhdr9p iefjof",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText(" xhjol griuldh ihih S&*P(YP&*SE yp9yrgai)",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("I don't know what happend",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("as 62g76er5249g24ext5y  ",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("a dfi hare oa hafd gpre gh\e",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("maybe system have some wrong",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("43 tgipraouwjda ;kg j",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("Error",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("a eto h ue5624dzf 56fg",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("errorerrorerrorerrorerrorerror1024AAAsasn",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+        elif self.name == "666666":
+            self.animation_showText("666666",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("I like that",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("but I hate old 6",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("like my friend Allen(Grass King)",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("He had a lot of time get 0 damge in RIVALS",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("..............",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+            self.animation_showText("I don't know say what",234,Gradient = True , GradientTime= 30)
+            self.animation_wait(30)
+
+        elif self.name == "10Htimeplayed":
+            self.animation_showText(":)",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+            self.animation_showText("You played It's 10 hour now",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+            self.animation_showText("How do you feel?",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+            self.animation_showText("Did you get all item?",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+
+        elif self.name == "10000roll":
+            self.animation_showText("WOW",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+            self.animation_showText("You rolled 10000times",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
 
     def animation_showText(self,text:str,time:int ,
                            text_color = (255,255,255),
