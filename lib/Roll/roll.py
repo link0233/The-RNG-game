@@ -76,7 +76,7 @@ class rollUI:
         self.show_image = None
         self.timeToRun_surface = FONT.render("0s", True, (0,0,0))
 
-        self.rollDelay = 3 #等待3秒抽一次
+        self.rollDelay :float = 3 #等待3秒抽一次
 
         # self.items = {
         #     "common"      : 2,         v
@@ -128,6 +128,12 @@ class rollUI:
             self.screen.screen.blit(self.timeToRun_surface,self.timeToRun_Rect)
 
     def update(self):
+        # 處理所有的加成
+        self.roll.luckboost = 1
+        self.roll.luckboost *= self.screen.Achievement.totalLuckBoost
+
+        self.RollTimeRate.interval = self.rollDelay
+        self.RollTimeRate.interval -= self.screen.Achievement.totalTimeReduce
         self.rollAnimation.update()
         #在主畫面時更興按鈕狀態
         if self.screen.scene == 0:

@@ -7,6 +7,7 @@ from lib.GUI.quitButton import *
 from lib.Roll.roll import *
 from lib.inventory.inventory import *
 from lib.states.states import *
+from lib.Achievement.Achievement import Achievement
 from lib.functions.RateLimitedFunction import RateLimitedFunction
 from lib.functions.functions import returnTrue
 
@@ -35,6 +36,7 @@ class screen():
         self.inventory :inventory   = inventory(self)
         self.states : states = states(self)
         self.autoSave : RateLimitedFunction = RateLimitedFunction(10,returnTrue)
+        self.Achievement = Achievement(self)
 
         #load
         self.load()
@@ -46,16 +48,19 @@ class screen():
         self.roll.draw()
         self.inventory.draw()
         self.states.draw()
+        self.Achievement.draw()
         
         pygame.display.update()
 
     def update(self):
         self.event = pygame.event.get()
+        SCREEN_EVENT = self.event
 
         if self.scene == 0 : self.quitButton.update()
         self.roll.update()
         self.inventory.update()
         self.states.update()
+        self.Achievement.update()
 
         self.autoSave.execute(self.save)
         #quit

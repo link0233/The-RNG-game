@@ -52,3 +52,12 @@ def draw_text(screen, text, font, color, rect, line_height, antialias=True):
     if line:
         text_surface = font.render(line, antialias, color)
         screen.blit(text_surface, (x, y))
+
+def closest_smaller(a, b):
+    """
+    :param a: 一個清單
+    :param b: 一個數字
+    回傳a 中 最接近b且小於b的數字
+    """
+    smaller_numbers = [x for x in a if x <= b]  # 過濾出小於 b 的數字
+    return max(smaller_numbers, default=None)  # 找最大值（最接近 b），如果沒有則回傳 None
