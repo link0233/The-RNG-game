@@ -161,6 +161,7 @@ class rollUI:
         #確定抽到的物品
         self.screen.states.states["rolls"] += 1
         get = self.roll.roll()
+        self.screen.inventory.addCash(get)
         rollitemlist = []
         bestitem = "common"
         for item in self.screen.inventory.item_list:

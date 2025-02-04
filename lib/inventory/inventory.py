@@ -2,12 +2,13 @@ import pygame
 from config import *
 
 from lib.inventory.item import item
-from lib.inventory.inventoryUI import *
+from lib.inventory.itemUI import *
 
 class inventory:
     def __init__(self,screen):
-        self.inventoryData = {"normalItem":{},"specialItem":{},"extraItem":{}}
+        self.inventoryData = {"cash":0,"normalItem":{},"specialItem":{},"extraItem":{}}
         self.screen = screen
+        pygame.font.init()
 
         self.ItemUI :ItemUI = ItemUI(screen)
 
@@ -39,11 +40,25 @@ class inventory:
             "10000roll"       : item("10000roll"       ,0          ,2,"./images/items/10000roll.png","extraItem",screen),
         }
 
+        # cash
+        self.cash_boost = 1
+        self.cash_font = pygame.font.Font("./font/Ubuntu/Ubuntu-Bold.ttf",70)
+        self.cash_font_height = self.cash_font.get_height() +10
+        image = self.cash_font.render(f"${self.inventoryData["cash"]}",True,(53, 255, 107))
+        self.cash_rect = image.get_rect()
+        self.cash_rect.center = (SCREENSIZEX//2,self.cash_font_height//2)
+
     def update(self):
         self.ItemUI.update()
 
     def draw(self):
         self.ItemUI.draw()
+        # draw cash
+        if self.screen.scene == SCENE_MAIN:
+            i = self.cash_font.render(f"${self.inventoryData["cash"]:.2f}",True,(53, 255, 107))
+            self.cash_rect =  i.get_rect()
+            self.cash_rect.center = (SCREENSIZEX//2,self.cash_font_height//2)
+            self.screen.screen.blit(i,self.cash_rect)
 
     def checkExtraGet(self):
         """
@@ -53,3 +68,11 @@ class inventory:
             if self.item_list[item].checkExtraGet():
                 return item
         return None
+    
+    def addCash(self,noboost_cash:int = 0,boosted_cash:int = 0):
+        """
+        增加錢錢
+        noboost_cash : 需要加成的
+        boosted_cash : 以加成的
+        """
+        self.inventoryData["cash"] += noboost_cash * self.cash_boost + boosted_cash

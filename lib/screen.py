@@ -82,10 +82,11 @@ class screen():
         with open("./saves/item.json","r") as f:
             inventoryData = json.load(f)
         #包含更興處理 item -> normal item
-        if "normalItem"  in inventoryData:    self.inventory.inventoryData["normalItem"] = inventoryData["normalItem"]
-        elif "item"      in inventoryData:    self.inventory.inventoryData["normalItem"] = inventoryData["item"]#優先選normalItem
+        if "normalItem"  in inventoryData:    self.inventory.inventoryData["normalItem"]  = inventoryData["normalItem"]
+        elif "item"      in inventoryData:    self.inventory.inventoryData["normalItem"]  = inventoryData["item"]#優先選normalItem
         if "specialItem" in inventoryData:    self.inventory.inventoryData["specialItem"] = inventoryData["specialItem"]
-        if "extraItem"   in inventoryData:    self.inventory.inventoryData["extraItem"] = inventoryData["extraItem"]
+        if "extraItem"   in inventoryData:    self.inventory.inventoryData["extraItem"]   = inventoryData["extraItem"]
+        if "cash"        in inventoryData:    self.inventory.inventoryData["cash"]        = inventoryData["cash"]
         print(inventoryData)
 
     def save(self):
