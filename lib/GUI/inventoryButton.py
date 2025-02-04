@@ -1,13 +1,14 @@
 import pygame
 from lib.GUI.button import *
+from lib.GUI.imageButton import imageButtonChangeBg
 from config import *
 
-class openitemButton(Button):
+class openitemButton(imageButtonChangeBg):
     def __init__(self,screen):
         w = SCREENSIZEX//10
         h = SCREENSIZEY//15
         self.mainScreen = screen
-        super().__init__(0,SCREENSIZEY//2,w,h,"Item")
+        super().__init__("./images/button/inventory.png",0,500,100,100,50,border_radius=10)
 
 class closeitemButton(Button):
     def __init__(self,screen):

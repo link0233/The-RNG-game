@@ -3,6 +3,7 @@ from config import *
 
 from lib.inventory.item import item
 from lib.inventory.itemUI import *
+from lib.functions.functions import LongNumberToText
 
 class inventory:
     def __init__(self,screen):
@@ -44,7 +45,7 @@ class inventory:
         self.cash_boost = 1
         self.cash_font = pygame.font.Font("./font/Ubuntu/Ubuntu-Bold.ttf",70)
         self.cash_font_height = self.cash_font.get_height() +10
-        image = self.cash_font.render(f"${self.inventoryData["cash"]}",True,(53, 255, 107))
+        image = self.cash_font.render(f"${LongNumberToText(self.inventoryData["cash"])}",True,(53, 255, 107))
         self.cash_rect = image.get_rect()
         self.cash_rect.center = (SCREENSIZEX//2,self.cash_font_height//2)
 
@@ -55,7 +56,7 @@ class inventory:
         self.ItemUI.draw()
         # draw cash
         if self.screen.scene == SCENE_MAIN:
-            i = self.cash_font.render(f"${self.inventoryData["cash"]:.2f}",True,(53, 255, 107))
+            i = self.cash_font.render(f"${LongNumberToText(self.inventoryData["cash"])}",True,(53, 255, 107))
             self.cash_rect =  i.get_rect()
             self.cash_rect.center = (SCREENSIZEX//2,self.cash_font_height//2)
             self.screen.screen.blit(i,self.cash_rect)

@@ -6,6 +6,7 @@ from lib.Achievement.part import part
 from lib.functions.RateLimitedFunction import RateLimitedFunction
 from lib.functions.functions import returnTrue
 from lib.functions.functions import closest_smaller
+from lib.GUI.imageButton import imageButtonChangeBg
 
 class Achievement:
     def __init__(self,screen):              # 後兩項留給 part 讀取
@@ -29,7 +30,7 @@ class Achievement:
             "time" : part("time",1,self.screen)
         }
         
-        self.openButton:openAchievementButton = openAchievementButton(screen)
+        self.openButton:imageButtonChangeBg = imageButtonChangeBg("./images/button/Anchievement.png",0,600,100,100,50,border_radius=10)
         self.closeButton:closeAchievementButton = closeAchievementButton(screen)
         self.stateupdatetimelimit : RateLimitedFunction = RateLimitedFunction(10 , returnTrue)
 
@@ -53,7 +54,7 @@ class Achievement:
     def update(self):
         ACHIEVEMENT_DATA = self.achievementData
         # buttons
-        if self.openButton.handle_event(self.screen.event) : self.screen.scene = SCENE_ACHIEVEMENT
+        if self.openButton.check_clicked(self.screen.event) : self.screen.scene = SCENE_ACHIEVEMENT
         if self.closeButton.handle_event(self.screen.event): self.screen.scene = SCENE_MAIN
         self.stateupdatetimelimit.execute(self.update_state)
         if self.screen.scene == SCENE_ACHIEVEMENT:

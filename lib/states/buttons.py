@@ -1,11 +1,11 @@
 from lib.GUI.button import *
 from config import *
 
-class openStateButton(Button):
-    def  __init__(self):
-        w = SCREENSIZEX//10
-        h = SCREENSIZEY//15
-        super().__init__(0,SCREENSIZEY//2 + h ,w , h , "state")
+# class openStateButton(Button):
+#     def  __init__(self):
+#         w = SCREENSIZEX//10
+#         h = SCREENSIZEY//15
+#         super().__init__(0,SCREENSIZEY//2 + h ,w , h , "state")
 
 class closeStatesButton(Button):
     def __init__(self,screen):

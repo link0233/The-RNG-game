@@ -83,7 +83,7 @@ class ItemUI:
 
     def update(self):
         #處理開啟和關閉
-        if self.openButton.handle_event(self.screen.event) and self.screen.scene == 0: 
+        if self.openButton.check_clicked(self.screen.event) and self.screen.scene == 0: 
             self.screen.scene = 1
 
         if self.closeButton.handle_event(self.screen.event) and self.screen.scene == 1:

@@ -7,7 +7,7 @@ class autoRollButton(Button):
         w = SCREENSIZEX//10-20
         h = SCREENSIZEY//20-10
         self.toggle = False# 設定是否有在自動抽
-        super().__init__((SCREENSIZEX - w)//2 -w-30, SCREENSIZEY- 2*h,w,h,"autoRoll!",hover_color= (100,100,100))
+        super().__init__((SCREENSIZEX - w)//2 -w-30, SCREENSIZEY- 2*h,w,h,"Auto Roll",hover_color= (100,100,100),font = "./font/Ubuntu/Ubuntu-Bold.ttf",border_radius= 10)
         self.screen = screen
 
     def update(self):

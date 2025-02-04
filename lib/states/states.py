@@ -3,6 +3,7 @@ import json
 import time
 
 from lib.states.buttons import *
+from lib.GUI.imageButton import imageButtonChangeBg
 
 class states:
     def __init__(self,screen):
@@ -22,7 +23,7 @@ class states:
         self.bgrect.y = 0
         self.bgImage.set_alpha(150)
     
-        self.openButton : openStateButton = openStateButton()
+        self.openButton : imageButtonChangeBg = imageButtonChangeBg("./images/button/state.png",0,400,100,100,50,border_radius=10)
         self.closeButton: closeStatesButton = closeStatesButton(self.screen)
 
     def update(self):
@@ -33,7 +34,7 @@ class states:
 
         #處理按鈕
         if self.screen.scene == 0 : 
-            if self.openButton.handle_event(self.screen.event) : self.screen.scene = 2
+            if self.openButton.check_clicked(self.screen.event) : self.screen.scene = 2
 
         if self.screen.scene == 2:
             if self.closeButton.handle_event(self.screen.event) : self.screen.scene = 0

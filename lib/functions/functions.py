@@ -61,3 +61,16 @@ def closest_smaller(a, b):
     """
     smaller_numbers = [x for x in a if x <= b]  # 過濾出小於 b 的數字
     return max(smaller_numbers, default=None)  # 找最大值（最接近 b），如果沒有則回傳 None
+
+def LongNumberToText(n :float):
+    t :str = f"{n:.0f}"
+    l = len(t)
+    nt:str = ""
+    k = 1
+    for a in t:
+        nt += a
+        if (k == l%3 or (k-l%3)%3 == 0 ) and k !=l:
+            nt +=","
+        k +=1
+
+    return nt
