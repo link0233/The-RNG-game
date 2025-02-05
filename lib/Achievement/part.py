@@ -25,11 +25,11 @@ class part:
         pygame.draw.rect(self.bg_image,(255,255,255),(0,0,self.size[0],self.size[1]),border_radius= 20)
         pygame.draw.rect(self.bg_image,(108, 227, 4),(5,5,self.size[0]-10,self.size[1]-10),border_radius= 20)
 
-        self.namefont = pygame.font.Font(self.arial,self.name_image_size[1] - 15)
+        self.namefont = pygame.font.Font("./font/Ubuntu/Ubuntu-Regular.ttf",self.name_image_size[1] - 45)
         self.name_image = self.namefont.render(self.name,True,(255,255,255))
         
-        self.ProgressBar_font = pygame.font.Font(self.arial,self.ProgressBar_image_size[1] - 30)
-        self.boost_font = pygame.font.Font(self.arial,self.boost_image_size[1] - 20)
+        self.ProgressBar_font = pygame.font.Font(self.arial,self.ProgressBar_image_size[1] - 35)
+        self.boost_font = pygame.font.Font("./font/Ubuntu/Ubuntu-Regular.ttf",self.boost_image_size[1] - 25)
 
         self.ProgressBar_image = pygame.Surface(self.ProgressBar_image_size)
         self.ProgressBar_image.set_colorkey((0,0,0))
@@ -49,16 +49,19 @@ class part:
         state = data["now_state"]
         value = data["now_value"]
         boost = data["boost"]
+        last  = data["last_level"]
         p_text = ""
         
-        if data["nextlevelreq_value"] == 0:
+        if data["nextlevelreq_value"]- last == 0:
             a = 1
+            p_text = data["nextlevelreq"]
         elif data["nextlevelreq"] == "max":
             a = 1
             p_text = data["nextlevelreq"]
         else: 
-            a = value / data["nextlevelreq_value"]
+            a = (value - last) / (data["nextlevelreq_value"] - last)
             p_text = f"{state} / {data["nextlevelreq"]}"
+        if a<0: a = 0
         pygame.draw.rect(self.ProgressBar_image,(51, 101, 7),(30,10,self.ProgressBar_image_size[0] - 60 , self.ProgressBar_image_size[1] -20),border_radius= self.ProgressBar_image_size[1]//2 - 10)
         pygame.draw.rect(self.ProgressBar_image,(74, 207, 255),(30,10,(self.ProgressBar_image_size[0] - 60) * a , self.ProgressBar_image_size[1] -20),border_radius= self.ProgressBar_image_size[1]//2 - 10)
         pt_image = self.ProgressBar_font.render(p_text,True,(0,0,1))

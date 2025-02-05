@@ -23,6 +23,8 @@ class item:
         self.canRoll = True
         self.hover_state = False
         self.beside_show_state = False
+        self.boost = 1
+        self.Achievement_boost = 1
 
         pygame.font.init()
         CourierNew = pygame.font.match_font("Tahoma")
@@ -234,6 +236,8 @@ class item:
             else :return False
         return False
 
+    def get_boost(self):
+        return self.Achievement_boost
 
     def draw_rolled(self,movex = 0,movey = 0):
         show_rect = self.rolled_image.get_rect()

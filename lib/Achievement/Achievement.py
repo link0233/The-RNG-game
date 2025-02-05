@@ -1,17 +1,17 @@
 import pygame
 from config import *
+import math
 
 from lib.Achievement.buttons import *
 from lib.Achievement.part import part
 from lib.functions.RateLimitedFunction import RateLimitedFunction
 from lib.functions.functions import returnTrue
 from lib.functions.functions import closest_smaller
+from lib.functions.functions import LongNumberToText
 from lib.GUI.imageButton import imageButtonChangeBg
 
 class Achievement:
     def __init__(self,screen):              # 後兩項留給 part 讀取
-        self.achievementData = {"roll":{"level": 0,"nextlevelreq" : "","boost" : "","nextlevelreq_value":0,"now_value":0,"now_state":""},
-                                "time":{"level": 0,"nextlevelreq" : "","boost" : "","nextlevelreq_value":0,"now_value":0,"now_state":""}}
         self.screen = screen
         self.totalLuckBoost = 1
         self.totalTimeReduce = 0
@@ -26,9 +26,22 @@ class Achievement:
 
         # 成就顯示方塊
         self.parts = {
-            "roll" : part("roll",0,self.screen),
-            "time" : part("time",1,self.screen)
+            "roll"        : part("roll"        ,0,self.screen),
+            "time"        : part("time"        ,1,self.screen),
+            "cash"        : part("cash"        ,2,self.screen),
+            "common"      : part("common"      ,3,self.screen),
+            "uncommon"    : part("uncommon"    ,4,self.screen),
+            "Rare"        : part("Rare"        ,5,self.screen),
+            "VeryRare"    : part("VeryRare"    ,6,self.screen),
+            "Epic"        : part("Epic"        ,7,self.screen),
+            "lengendery"  : part("lengendery"  ,8,self.screen)
         }
+        # self.achievementData = {"roll":{"level": 0,"nextlevelreq" : "","boost" : "","nextlevelreq_value":0,"now_value":0,"now_state":"","last_level":0},
+        #                         "time":{"level": 0,"nextlevelreq" : "","boost" : "","nextlevelreq_value":0,"now_value":0,"now_state":"","last_level":0},
+        #                         "common":{"level": 0,"nextlevelreq" : "","boost" : "","nextlevelreq_value":0,"now_value":0,"now_state":"","last_level":0}}
+        self.achievementData = {}
+        for name in self.parts:
+            self.achievementData[name] = {"level": 0,"nextlevelreq" : "","boost" : "","nextlevelreq_value":0,"now_value":0,"now_state":"","last_level":0}
         
         self.openButton:imageButtonChangeBg = imageButtonChangeBg("./images/button/Anchievement.png",0,600,100,100,50,border_radius=10)
         self.closeButton:closeAchievementButton = closeAchievementButton(screen)
@@ -74,6 +87,7 @@ class Achievement:
         self.achievementData["roll"]["boost"] = f"X{self.achievementData["roll"]["level"]* 0.1 +1 :.1f} Luck"
         self.achievementData["roll"]["nextlevelreq_value"] = (self.achievementData["roll"]["level"] +1) * 100
         self.achievementData["roll"]["nextlevelreq"] = f"{(self.achievementData["roll"]["level"] +1) * 100} Rolls"
+        self.achievementData["roll"]["last_level"] = (self.achievementData["roll"]["level"] ) *100
 
         #time
         totaltime = self.screen.states.states["playtime"]
@@ -88,6 +102,40 @@ class Achievement:
         else:
             self.achievementData["time"]["nextlevelreq"] = "max"
             self.achievementData["time"]["nextlevelreq_value"] = -1
+        self.achievementData["time"]["last_level"] = self.time_allLevel[min(self.achievementData["time"]["level"] ,0) ]
+        
+        #common
+        inventoryData = self.screen.inventory.inventoryData
+        text = ["common","uncommon","Rare","VeryRare","Epic","lengendery"]
+        for item in text:
+            if item in inventoryData["normalItem"]:
+                c = inventoryData["normalItem"][item]
+            else:
+                c = 0
+            self.achievementData[item]["now_value"] = c
+            self.achievementData[item]["now_state"] = f"{c:.2f} {item}"
+            if c != 0:
+                self.achievementData[item]["level"] = int(math.log2(c/8))
+                if self.achievementData[item]["level"] <0 : self.achievementData[item]["level"] = 0
+            else:
+                self.achievementData[item]["level"] = 0
+            self.achievementData[item]["boost"] = f"X{self.achievementData[item]["level"]* 0.1 +1 :.1f} {item}"
+            self.achievementData[item]["nextlevelreq_value"] = (2**((self.achievementData[item]["level"] +1)))*8
+            self.achievementData[item]["nextlevelreq"] = f"{self.achievementData[item]["nextlevelreq_value"]:.0f} {item}"
+            self.achievementData[item]["last_level"] = (2**((self.achievementData[item]["level"] )))*8
+            self.screen.inventory.item_list[item].Achievement_boost = self.achievementData[item]["level"]* 0.1 +1
+            
+        # cash
+        totalroll = self.screen.inventory.inventoryData["cash"]
+        self.achievementData["cash"]["now_value"] = totalroll
+        self.achievementData["cash"]["now_state"] = f"$ " + LongNumberToText(totalroll)
+        if totalroll <= 0 : self.achievementData["cash"]["level"] = 0
+        else: self.achievementData["cash"]["level"] = int(math.log10(totalroll/10))
+        self.achievementData["cash"]["boost"] = f"X{self.achievementData["cash"]["level"]* 0.1 +1 :.1f} Cash"
+        self.achievementData["cash"]["nextlevelreq_value"] = (10**(self.achievementData["cash"]["level"] +1) )*10
+        self.achievementData["cash"]["nextlevelreq"] = f"{ LongNumberToText((10**(self.achievementData["cash"]["level"] +1) )*10)} Cash"
+        self.achievementData["cash"]["last_level"] = (10**(self.achievementData["cash"]["level"] ) )*10
+
         # reset
         self.totalLuckBoost = 1
 

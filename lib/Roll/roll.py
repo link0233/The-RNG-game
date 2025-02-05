@@ -153,7 +153,7 @@ class rollUI:
         print(getExtra)
         if getExtra != None:
             self.show_image = getExtra
-            self.rollAnimation.playAnimation(getExtra)
+            self.rollAnimation.playAnimation(getExtra,self.RollTimeRate.interval)
             self.screen.inventory.inventoryData["extraItem"][getExtra] = 1
             # self.screen.inventory.item_list[  getExtra ] . play_animation()
             # self.RollTimeRate.reset()
@@ -183,14 +183,14 @@ class rollUI:
 
         # 加入得到的物品至清單中
         if itemget in self.screen.inventory.inventoryData[getItemType]:
-            self.screen.inventory.inventoryData[getItemType][itemget] += 1
+            self.screen.inventory.inventoryData[getItemType][itemget] += self.screen.inventory.item_list[  itemget ].get_boost()
         else:
-            self.screen.inventory.inventoryData[getItemType][itemget] = 1
+            self.screen.inventory.inventoryData[getItemType][itemget] = self.screen.inventory.item_list[  itemget ].get_boost()
 
         self.show_image = itemget
         #確定之後撥放動畫
         print(itemget)
-        self.rollAnimation.playAnimation(itemget)
+        self.rollAnimation.playAnimation(itemget,self.RollTimeRate.interval)
         # self.screen.inventory.item_list[  itemget ] . play_animation()
         # self.RollTimeRate.reset()
         #self.text_surface = FONT.render(f"You get:{itemget.name} ", True, (0,0,0))
@@ -214,20 +214,25 @@ class rollAnimation:
         self.down_distance = 30
         self.down_movey = 0
         self.AnimationPlayTime = 2
+        self.show_currect_time = 0
 
         self.showing_image = None
 
-    def playAnimation(self,rolled):
+    def playAnimation(self,rolled,rollSpeed):
         self.playing = True
         self.start_play_time = time.time()
+        self.start_time_to_next_image = rollSpeed/50
+        self.time_to_next_image_plus = rollSpeed/100
         self.time_to_next_image = self.start_time_to_next_image
+        self.down_Duration = self.time_to_next_image/2
         self.rolled = rolled
         self.item_list = self.screen.inventory.item_list
         self.last_change = 0
+        self.show_currect_time = rollSpeed/3
         self.change_image()
 
     def change_image(self):
-        if self.last_change + self.time_to_next_image >= self.AnimationPlayTime:
+        if self.last_change + self.time_to_next_image + self.show_currect_time>= self.AnimationPlayTime:
             self.showing_image = self.rolled
         else:
             self.roll.luckboost = self.screen.roll.roll.luckboost ** 0.8
@@ -253,10 +258,12 @@ class rollAnimation:
         if self.playing:
             now = time.time()
             t = now - self.start_play_time
+            
             if t - self.last_change >= self.time_to_next_image:
                 self.time_to_next_image += self.time_to_next_image_plus
                 self.last_change = t
                 self.change_image()
+            
             if t >= self.AnimationPlayTime:
                 self.playing = False
                 self.showing_image = None
