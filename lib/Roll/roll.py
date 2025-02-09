@@ -77,6 +77,7 @@ class rollUI:
         self.timeToRun_surface = FONT.render("0s", True, (0,0,0))
 
         self.rollDelay :float = 3 #等待3秒抽一次
+        self.baseLuckBoost = 1
 
         # self.items = {
         #     "common"      : 2,         v
@@ -129,8 +130,9 @@ class rollUI:
 
     def update(self):
         # 處理所有的加成
-        self.roll.luckboost = 1
-        self.roll.luckboost *= self.screen.Achievement.totalLuckBoost
+        self.baseLuckBoost = 1
+        self.baseLuckBoost *= self.screen.Achievement.totalLuckBoost
+        self.roll.luckboost = self.baseLuckBoost * self.screen.setting.ChangeLuckBoost.downLuck
 
         self.RollTimeRate.interval = self.rollDelay
         self.RollTimeRate.interval -= self.screen.Achievement.totalTimeReduce

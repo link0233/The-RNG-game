@@ -237,7 +237,7 @@ class item:
         return False
 
     def get_boost(self):
-        return self.Achievement_boost
+        return self.Achievement_boost * self.screen.setting.ChangeLuckBoost.ItemGetBoost
 
     def draw_rolled(self,movex = 0,movey = 0):
         show_rect = self.rolled_image.get_rect()
@@ -285,7 +285,7 @@ class item:
                 self.item_image.blit(self.rarity_image,self.rarity_rect)
 
                 #唯獨數量會變所以不能先設定
-                count_image = self.font.render(str(count),True,(0,0,0))
+                count_image = self.font.render(f"{count:.0f}",True,(0,0,0))
                 count_rect = count_image.get_rect()
                 count_rect.center = (self.item_name_image_w + self.rarity_image_w + self.count_w//2 ,self.item_image_h//2)
                 self.item_image.blit(count_image , count_rect)

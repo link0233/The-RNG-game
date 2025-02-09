@@ -23,7 +23,8 @@ class states:
         self.bgrect.y = 0
         self.bgImage.set_alpha(150)
     
-        self.openButton : imageButtonChangeBg = imageButtonChangeBg("./images/button/state.png",0,400,100,100,50,border_radius=10)
+        size = self.screen.size
+        self.openButton : imageButtonChangeBg = imageButtonChangeBg("./images/button/state.png",0,size[1]//2-size[1]//10,size[1]//10-5,size[1]//10-5,50,border_radius=10)
         self.closeButton: closeStatesButton = closeStatesButton(self.screen)
 
     def update(self):

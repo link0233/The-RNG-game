@@ -43,7 +43,8 @@ class Achievement:
         for name in self.parts:
             self.achievementData[name] = {"level": 0,"nextlevelreq" : "","boost" : "","nextlevelreq_value":0,"now_value":0,"now_state":"","last_level":0}
         
-        self.openButton:imageButtonChangeBg = imageButtonChangeBg("./images/button/Anchievement.png",0,600,100,100,50,border_radius=10)
+        size = self.screen.size
+        self.openButton:imageButtonChangeBg = imageButtonChangeBg("./images/button/Anchievement.png",0,size[1]//2,size[1]//10-5,size[1]//10-5,50,border_radius=10)
         self.closeButton:closeAchievementButton = closeAchievementButton(screen)
         self.stateupdatetimelimit : RateLimitedFunction = RateLimitedFunction(10 , returnTrue)
 
@@ -67,10 +68,11 @@ class Achievement:
     def update(self):
         ACHIEVEMENT_DATA = self.achievementData
         # buttons
-        if self.openButton.check_clicked(self.screen.event) : self.screen.scene = SCENE_ACHIEVEMENT
-        if self.closeButton.handle_event(self.screen.event): self.screen.scene = SCENE_MAIN
+        if self.openButton.check_clicked(self.screen.event) and self.screen.scene == SCENE_MAIN: self.screen.scene = SCENE_ACHIEVEMENT
+        
         self.stateupdatetimelimit.execute(self.update_state)
         if self.screen.scene == SCENE_ACHIEVEMENT:
+            if self.closeButton.handle_event(self.screen.event): self.screen.scene = SCENE_MAIN
             for event in self.screen.event:
                 if event.type == pygame.MOUSEWHEEL:
                     self.move_value += event.y * self.move_step 

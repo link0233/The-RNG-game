@@ -9,14 +9,17 @@ GRAY = (200, 200, 200)
 BLUE = (0, 0, 255)
 
 class Button:
-    def __init__(self, x, y, w, h, text, color=GRAY, text_color=BLACK, hover_color=BLUE,font:str = arial , border_radius = -1):
+    def __init__(self, x, y, w, h, text, color=GRAY, text_color=BLACK, hover_color=BLUE,textsize = -1,font:str = arial , border_radius = -1):
         self.rect = pygame.Rect(x, y, w, h)
         self.color = color
         self.text = text
         self.text_color = text_color
         self.hover_color = hover_color
         self.current_color = color
-        self.font = pygame.font.Font(font,h-15)
+        if textsize == -1:
+            self.font = pygame.font.Font(font,h-15)
+        else:
+            self.font = pygame.font.Font(font,textsize)
         self.text_surface = self.font.render(text, True, text_color)
         self.border_radius = border_radius
 
@@ -27,16 +30,16 @@ class Button:
             self.rect.y + (self.rect.height - self.text_surface.get_height()) // 2,
         ))
 
-    def handle_event(self,events):
+    def handle_event(self,events,move = (0,0)):
         for event in events:
             if event.type == pygame.MOUSEMOTION:
                 # 檢查滑鼠是否在按鈕範圍內
-                if self.rect.collidepoint(event.pos):
+                if self.rect.collidepoint(event.pos[0] - move[0],event.pos[1] - move[1]):
                     self.current_color = self.hover_color
                 else:
                     self.current_color = self.color
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if self.rect.collidepoint(event.pos):
+                    if self.rect.collidepoint(event.pos[0] - move[0],event.pos[1] - move[1]):
                         return True  # 如果按鈕被點擊，返回 True
         return False

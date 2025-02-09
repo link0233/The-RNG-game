@@ -8,6 +8,7 @@ from lib.Roll.roll import *
 from lib.inventory.inventory import *
 from lib.states.states import *
 from lib.Achievement.Achievement import Achievement
+from lib.setting.setting import setting
 from lib.functions.RateLimitedFunction import RateLimitedFunction
 from lib.functions.functions import returnTrue
 
@@ -15,8 +16,18 @@ class screen():
     def __init__(self):
         pygame.init()
         pygame.font.init()
-        self.screen = pygame.display.set_mode(SCREENSIZE)
+        self.screen = pygame.display.set_mode((0,0),pygame.FULLSCREEN)
+        self.size = self.screen.get_size()
         self.clock = pygame.time.Clock()
+
+        loadingfont = pygame.font.Font("./font/Ubuntu/Ubuntu-Bold.ttf",100)
+        loadingimage = loadingfont.render("Loading",True,(255,255,255))
+        rect = loadingimage.get_rect()
+        rect.centerx = self.size[0]//2
+        rect.centery = self.size[1]//2
+        self.screen.fill((0,0,0))
+        self.screen.blit(loadingimage,rect)
+        pygame.display.update()
 
         #場景
         self.scene = 0
@@ -37,9 +48,14 @@ class screen():
         self.states : states = states(self)
         self.autoSave : RateLimitedFunction = RateLimitedFunction(10,returnTrue)
         self.Achievement = Achievement(self)
+        self.setting : setting = setting(self)
 
         #load
         self.load()
+
+        loadingfont = None
+        loadingimage = None
+        rect = None
         
     def draw(self):
         self.screen.fill(SCREEN_BGCOLOR)
@@ -49,6 +65,7 @@ class screen():
         self.inventory.draw()
         self.states.draw()
         self.Achievement.draw()
+        self.setting.draw()
         
         pygame.display.update()
 
@@ -61,6 +78,7 @@ class screen():
         self.inventory.update()
         self.states.update()
         self.Achievement.update()
+        self.setting.update()
 
         self.autoSave.execute(self.save)
         #quit

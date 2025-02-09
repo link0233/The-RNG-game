@@ -8,7 +8,8 @@ class openitemButton(imageButtonChangeBg):
         w = SCREENSIZEX//10
         h = SCREENSIZEY//15
         self.mainScreen = screen
-        super().__init__("./images/button/inventory.png",0,500,100,100,50,border_radius=10)
+        size = screen.size
+        super().__init__("./images/button/inventory.png",0,size[1]//2 - 2*size[1]//10,size[1]//10-5,size[1]//10-5,50,border_radius=10)
 
 class closeitemButton(Button):
     def __init__(self,screen):
