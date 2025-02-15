@@ -21,24 +21,47 @@ class Achievement:
 
         #移動
         self.move_step = 75
-        self.move_max = SCREENSIZEY//5 * 1 * -1
+        self.move_max = SCREENSIZEY//5 * 5 * -1
         self.move_value = 0
 
         # 成就顯示方塊
         self.parts = {
-            "roll"        : part("roll"        ,0,self.screen),
-            "time"        : part("time"        ,1,self.screen),
-            "cash"        : part("cash"        ,2,self.screen),
-            "common"      : part("common"      ,3,self.screen),
-            "uncommon"    : part("uncommon"    ,4,self.screen),
-            "Rare"        : part("Rare"        ,5,self.screen),
-            "VeryRare"    : part("VeryRare"    ,6,self.screen),
-            "Epic"        : part("Epic"        ,7,self.screen),
-            "lengendery"  : part("lengendery"  ,8,self.screen)
+            "roll"             : part("roll"        ,0,self.screen),
+            "time"             : part("time"        ,1,self.screen),
+            "cash"             : part("cash"        ,2,self.screen),
+            "common"           : part("common"      ,3,self.screen),
+            "uncommon"         : part("uncommon"    ,4,self.screen),
+            "Rare"             : part("Rare"        ,5,self.screen),
+            "VeryRare"         : part("VeryRare"    ,6,self.screen),
+            "Epic"             : part("Epic"        ,7,self.screen),
+            "lengendery"       : part("lengendery"  ,8,self.screen),
+            "mythical"         : part("mythical"    ,9,self.screen),
+            "Effortless"       : part("Effortless"  ,9,self.screen),
+            "Easy"             : part("Easy"        ,10,self.screen),
+            "Painless"         : part("Painless"    ,11,self.screen),
+            "Uncomplicated"    : part("Uncomplicated"     ,12,self.screen),
+            "Straightforward"  : part("Straightforward"   ,13,self.screen),
+            "Manageable"       : part("Manageable"        ,14, self.screen),
+            "Mild"             : part("Mild"              ,15,self.screen),
+            "Undemanding"      : part("Undemanding"       ,16,self.screen),
+            "Fairly easy"      : part("Fairly easy"       ,17,self.screen),
+            "A bit difficult"  : part("A bit difficult"   ,18,self.screen)
         }
         # self.achievementData = {"roll":{"level": 0,"nextlevelreq" : "","boost" : "","nextlevelreq_value":0,"now_value":0,"now_state":"","last_level":0},
         #                         "time":{"level": 0,"nextlevelreq" : "","boost" : "","nextlevelreq_value":0,"now_value":0,"now_state":"","last_level":0},
         #                         "common":{"level": 0,"nextlevelreq" : "","boost" : "","nextlevelreq_value":0,"now_value":0,"now_state":"","last_level":0}}
+        a = 0
+        upitem = "common"
+        for _item in self.parts:
+            # if self.parts[upitem].item_type == "normalItem" and self.parts[_item].item_type == "specialItem":
+            #     a = 0
+            # if self.parts[upitem].item_type == "specialItem" and self.parts[_item].item_type == "extraItem":
+            #     a = 0
+            self.parts[_item].pos = a
+            self.parts[_item].create_image()
+            a +=1
+            upitem  = _item
+        
         self.achievementData = {}
         for name in self.parts:
             self.achievementData[name] = {"level": 0,"nextlevelreq" : "","boost" : "","nextlevelreq_value":0,"now_value":0,"now_state":"","last_level":0}
@@ -108,7 +131,7 @@ class Achievement:
         
         #common
         inventoryData = self.screen.inventory.inventoryData
-        text = ["common","uncommon","Rare","VeryRare","Epic","lengendery"]
+        text = ["common","uncommon","Rare","VeryRare","Epic","lengendery","mythical"]
         for item in text:
             if item in inventoryData["normalItem"]:
                 c = inventoryData["normalItem"][item]
@@ -138,10 +161,48 @@ class Achievement:
         self.achievementData["cash"]["nextlevelreq"] = f"{ LongNumberToText((10**(self.achievementData["cash"]["level"] +1) )*10)} Cash"
         self.achievementData["cash"]["last_level"] = (10**(self.achievementData["cash"]["level"] ) )*10
 
+        #南度系列
+        #最低的
+        try:Effortlesses = self.screen.inventory.inventoryData["normalItem"]["Effortless"]
+        except : Effortlesses = 0
+        self.achievementData["Effortless"]["now_value"] = Effortlesses
+        self.achievementData["Effortless"]["now_state"] = f"" + LongNumberToText(Effortlesses)
+        if Effortlesses <= 0 : self.achievementData["Effortless"]["level"] = 0
+        else: self.achievementData["Effortless"]["level"] = int(math.log(Effortlesses,1.35)) - 15
+        if self.achievementData["Effortless"]["level"] <= 0 :self.achievementData["Effortless"]["level"]   = 0
+        self.achievementData["Effortless"]["boost"] = f"x {self.achievementData["Effortless"]["level"]* 0.1 +1 :.1f} Luck"
+        self.achievementData["Effortless"]["nextlevelreq_value"] = 1.35 ** (self.achievementData["Effortless"]["level"] +16)
+        self.achievementData["Effortless"]["nextlevelreq"] = f"{ LongNumberToText(1.35**(self.achievementData["Effortless"]["level"] +16))} Effortless"
+        self.achievementData["Effortless"]["last_level"] =  1.35 ** (self.achievementData["Effortless"]["level"] + 15)
+
+        #其他
+        inventoryData = self.screen.inventory.inventoryData
+        text = ["Effortless","Easy","Painless","Uncomplicated","Straightforward","Manageable","Mild","Undemanding","Fairly easy","A bit difficult"]
+        for item in text:
+            if item == "Effortless" : continue # 這東西是用來演算的，沒有他
+            if item in inventoryData["normalItem"]:
+                c = inventoryData["normalItem"][item]
+            else:
+                c = 0
+            count = text.index(item)
+            self.achievementData[item]["now_value"] = c
+            self.achievementData[item]["now_state"] = f"{c:.2f} {item}"
+            if c != 0:
+                self.achievementData[item]["level"] = int(c)
+                if self.achievementData[item]["level"] <0 : self.achievementData[item]["level"] = 0
+            else:
+                self.achievementData[item]["level"] = 0
+            self.achievementData[item]["boost"] = f"X{self.achievementData[item]["level"]* 0.1 +1 :.1f} {text[count -1]}"
+            self.achievementData[item]["nextlevelreq_value"] = c +1
+            self.achievementData[item]["nextlevelreq"] = f"{self.achievementData[item]["nextlevelreq_value"]:.0f} {item}"
+            self.achievementData[item]["last_level"] = c
+            self.screen.inventory.item_list[text[count -1]].Achievement_boost = self.achievementData[item]["level"]* 0.1 +1
+
         # reset
         self.totalLuckBoost = 1
 
         self.totalLuckBoost *= self.achievementData["roll"]["level"]* 0.1 +1
+        self.totalLuckBoost *= self.achievementData["Effortless"]["level"] *0.1 +1
         self.totalTimeReduce = self.achievementData["time"]["level"]* 0.1# 抽取速度僅此一加成
         if self.totalTimeReduce > 1.5 : self.totalTimeReduce = 1.5 
 

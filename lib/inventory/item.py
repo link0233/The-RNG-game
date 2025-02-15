@@ -34,6 +34,7 @@ class item:
         if   self.name == "100roll" : self.caption = "You roll 100 times !!!!!!!!!"
         elif self.name == "10000roll" : self.caption = "You roll 10000 times !!!!!!!!!"
         elif self.name == "10Htimeplayed" : self.caption = "You played 10H in this game!!"
+        elif self.name == "2025HappyNewYear" : self.caption = "Hatch it around 2025 new year!!"
 
         # 創建圖片
         self.rolled_image = pygame.image.load(image_path).convert_alpha()
@@ -41,7 +42,7 @@ class item:
         self.rolled_rect        = self.rolled_image.get_rect()
         self.rolled_rect.center = (SCREENSIZEX//2,SCREENSIZEY//2) #一律放在螢幕中間
 
-
+    def loadImage(self):
         #顯示在物品欄中的
         if self.item_type == "normalItem":
             #主要的
@@ -62,7 +63,7 @@ class item:
             self.rarity_rect      = self.rarity_image.get_rect()
 
             self.item_rect.x           = 0
-            self.item_rect.y           = rarity_count * self.item_image_h
+            self.item_rect.y           = self.rarity_count * self.item_image_h
             self.item_name_rect.center = (self.item_name_image_w//2,self.item_image_h//2)
             self.not_get_rect.center   = (self.item_image_w//2,self.item_image_h//2)
             self.rarity_rect.center    = (self.item_name_image_w + self.rarity_image_w//2 ,self.item_image_h//2)
@@ -193,6 +194,100 @@ class item:
         self.hover_rect = self.hover_image.get_rect()
         self.hover_rect.x = 0
         self.hover_rect.y = 0
+
+    def unloadImage(self):
+        if self.item_type == "normalItem":
+            #主要的
+            self.item_image_w      = SCREENSIZEX//5*3
+            self.item_image_h      = SCREENSIZEY//7
+            self.item_name_image_w = self.item_image_w//5*2
+            self.rarity_image_w    = self.item_image_w //5 * 2
+            self.count_w           = self.item_image_w //5
+
+            self.item_image      = None
+            self.not_get_image   = None
+            self.rarity_image    = None
+            self.item_name_image = None
+
+            self.item_rect        = None
+            self.item_name_rect   = None
+            self.not_get_rect     = None
+            self.rarity_rect      = None
+            #旁邊的
+            #大小
+            self.beside_w = SCREENSIZEX - self.item_image_w
+            self.beside_h = SCREENSIZEY
+            original_size = self.rolled_image.get_size()
+            self.beside_showImage_w = self.beside_w
+            scale_factor = self.beside_showImage_w / original_size[0]
+            self.beside_showImage_h = original_size[1] * scale_factor
+
+            self.beside_image = None
+            self.beside_showImage = None
+
+            self.beside_rect = None
+            self.beside_showImage_rect = None
+
+        if self.item_type == "specialItem":
+            # 主要的
+            # 大小
+            self.item_image_w      = SCREENSIZEX//3
+            self.item_image_h      = SCREENSIZEY//6
+            self.item_name_image_h = self.item_image_h//4-5
+            self.rarity_image_h    = self.item_image_h//4-5
+            #圖
+            self.item_image      = None
+            self.not_get_image   = None
+            self.rarity_image    = None
+            self.item_name_image = None
+            
+            #set rect
+            self.item_rect        = None
+            self.item_name_rect   = None
+            self.not_get_rect     = None
+            self.rarity_rect      = None
+            #大小
+            self.beside_w = SCREENSIZEX - self.item_image_w*2
+            self.beside_h = SCREENSIZEY
+            original_size = self.rolled_image.get_size()
+            self.beside_showImage_w = self.beside_w
+            scale_factor = self.beside_showImage_w / original_size[0]
+            self.beside_showImage_h = original_size[1] * scale_factor
+
+            self.beside_image = None
+            self.beside_showImage = None
+
+            self.beside_rect = None
+            self.beside_rect.x = self.item_image_w*2
+            self.beside_showImage_rect = None
+            #波放動畫按鈕
+            self.playAnimationButton = None
+
+        if self.item_type == "extraItem":
+            # 主要的
+            #圖
+            self.item_image      = None
+            self.not_get_image   = None
+            self.item_name_image = None
+            #set rect
+            self.item_rect        = None
+            self.item_name_rect   = None
+            self.not_get_rect     = None
+            #旁邊的
+            #大小
+
+
+            self.beside_image = None
+            self.beside_showImage = None
+            self.beside_captionImage = None
+
+            self.beside_rect = None
+            self.beside_showImage_rect = None
+            self.beside_caption_rect = None
+            #波放動畫按鈕
+            self.playAnimationButton = None
+        self.hover_image = None
+        self.hover_rect = None
 
     def checkCanRoll(self):
         """

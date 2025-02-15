@@ -105,6 +105,10 @@ class screen():
         if "specialItem" in inventoryData:    self.inventory.inventoryData["specialItem"] = inventoryData["specialItem"]
         if "extraItem"   in inventoryData:    self.inventory.inventoryData["extraItem"]   = inventoryData["extraItem"]
         if "cash"        in inventoryData:    self.inventory.inventoryData["cash"]        = inventoryData["cash"]
+        # 活動限定處理
+        if "specialItem" in inventoryData:
+            if "2025HappyNewYear" in inventoryData["specialItem"]:
+                self.inventory.inventoryData["extraItem"]["2025HappyNewYear"] = 1
         print(inventoryData)
 
     def save(self):

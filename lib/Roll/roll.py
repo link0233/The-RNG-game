@@ -75,6 +75,7 @@ class rollUI:
         self.no_show_image = FONT.render(f"click roll to roll", True, (0,0,0))
         self.show_image = None
         self.timeToRun_surface = FONT.render("0s", True, (0,0,0))
+        self.testLuckboost = 1
 
         self.rollDelay :float = 3 #等待3秒抽一次
         self.baseLuckBoost = 1
@@ -132,7 +133,7 @@ class rollUI:
         # 處理所有的加成
         self.baseLuckBoost = 1
         self.baseLuckBoost *= self.screen.Achievement.totalLuckBoost
-        self.roll.luckboost = self.baseLuckBoost * self.screen.setting.ChangeLuckBoost.downLuck
+        self.roll.luckboost = self.baseLuckBoost * self.screen.setting.ChangeLuckBoost.downLuck * self.testLuckboost
 
         self.RollTimeRate.interval = self.rollDelay
         self.RollTimeRate.interval -= self.screen.Achievement.totalTimeReduce

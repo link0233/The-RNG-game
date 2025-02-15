@@ -5,8 +5,13 @@ class part:
     def __init__(self,name : str, pos : int ,screen ):
         self.screen = screen
         self.name = name
-        self.posx = pos % 4
-        self.posy = pos
+        self.pos = pos
+
+        
+
+    def create_image(self):
+        self.posx = self.pos % 4
+        self.posy = self.pos
 
         pygame.font.init()
         self.arial = pygame.font.match_font("arial")
@@ -25,7 +30,7 @@ class part:
         pygame.draw.rect(self.bg_image,(255,255,255),(0,0,self.size[0],self.size[1]),border_radius= 20)
         pygame.draw.rect(self.bg_image,(108, 227, 4),(5,5,self.size[0]-10,self.size[1]-10),border_radius= 20)
 
-        self.namefont = pygame.font.Font("./font/Ubuntu/Ubuntu-Regular.ttf",self.name_image_size[1] - 45)
+        self.namefont = pygame.font.Font("./font/Ubuntu/Ubuntu-Regular.ttf",self.name_image_size[1] - 55)
         self.name_image = self.namefont.render(self.name,True,(255,255,255))
         
         self.ProgressBar_font = pygame.font.Font(self.arial,self.ProgressBar_image_size[1] - 35)
