@@ -9,6 +9,7 @@ from lib.inventory.inventory import *
 from lib.states.states import *
 from lib.Achievement.Achievement import Achievement
 from lib.setting.setting import setting
+from lib.Upgrade.upgrade import upgrade
 from lib.functions.RateLimitedFunction import RateLimitedFunction
 from lib.functions.functions import returnTrue
 
@@ -49,6 +50,7 @@ class screen():
         self.autoSave : RateLimitedFunction = RateLimitedFunction(10,returnTrue)
         self.Achievement = Achievement(self)
         self.setting : setting = setting(self)
+        self.upgrade : upgrade = upgrade(self)
 
         #load
         self.load()
@@ -66,6 +68,7 @@ class screen():
         self.states.draw()
         self.Achievement.draw()
         self.setting.draw()
+        self.upgrade.draw()
         
         pygame.display.update()
 
@@ -79,6 +82,7 @@ class screen():
         self.states.update()
         self.Achievement.update()
         self.setting.update()
+        self.upgrade.update()
 
         self.autoSave.execute(self.save)
         #quit
@@ -97,6 +101,8 @@ class screen():
     def load(self):
         #讀取物品
         self.states.load()
+        self.upgrade.load()
+
         with open("./saves/item.json","r") as f:
             inventoryData = json.load(f)
         #包含更興處理 item -> normal item
@@ -114,5 +120,6 @@ class screen():
     def save(self):
         #物品存檔
         self.states.save()
+        self.upgrade.save()
         with open("./saves/item.json","w") as f:
             json.dump(self.inventory.inventoryData,f)

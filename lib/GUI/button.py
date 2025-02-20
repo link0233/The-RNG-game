@@ -16,12 +16,22 @@ class Button:
         self.text_color = text_color
         self.hover_color = hover_color
         self.current_color = color
+        self.text_size = textsize
+        self.h = h
         if textsize == -1:
             self.font = pygame.font.Font(font,h-15)
         else:
             self.font = pygame.font.Font(font,textsize)
         self.text_surface = self.font.render(text, True, text_color)
         self.border_radius = border_radius
+
+    def create_text(self , text :str = "__None__"):
+        """
+        當重興修改文字時可是用這個函示修改
+        """
+        if text != "__None__":
+            self.text = text
+        self.text_surface = self.font.render(text, True, self.text_color)
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.current_color, self.rect , border_radius= self.border_radius)
