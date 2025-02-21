@@ -5,30 +5,34 @@ from lib.GUI.button import Button
 from lib.functions.functions import draw_text
 
 class part:              
-    def __init__(self , screen , pos :list , title: str , Description : str , cost :str ):
+    def __init__(self , screen , pos :list , title: str , Description : str , cost :str , unlockneed :list):
         """
         screen : screen
         pos : (x ,y) 所處位置
         title : 標題
         Description : 說明文字
         cost : 需要的錢錢文字
+        unlockneed : 解鎖需要升級 ["升級名稱"] ,若為空則直接解鎖
         必須附上 ， check_can_buy 以及 pay 函式處理購買事件
         """
         self.screen = screen
         self.title = title
         self.Description = Description
         self.cost = cost
+        self.unlockneed = unlockneed
+        self.pos = pos
 
         # state
         self.hovering = False
         self.side_show = False
         self.bought = False
+        self.unlock = False
         #button
         self.buy_button = Button(self.screen.size[0] //3 *2.25 , self.screen.size[1] -(self.screen.size[1]//10 - 10) ,
                                  self.screen.size[0] //6,self.screen.size[1]//10 - 20,
                                  "Buy" , border_radius= 10)
         # position
-        self.part_x = pos[0] * self.screen.size[0]//15 +100
+        self.part_x = (pos[0]*2+1) * self.screen.size[0]//15 +100
         self.part_y = pos[1] * (self.screen.size[0]//15 + 20) + self.screen.size[1] //2
         # image
         self.part_width                = self.part_height = self.screen.size[0]//15
@@ -43,11 +47,13 @@ class part:
         self.side_image                = pygame.Surface((self.side_width,self.side_height))
         self.part_hover_cover_image    = pygame.Surface((self.part_width,self.part_height))
         self.not_buy_image             = pygame.Surface((self.part_width,self.part_height))
+        self.locked_image              = pygame.Surface((self.part_width,self.part_height))
 
         self.part_image               .fill((255,255,255))
         self.side_image               .fill((150,150,150))
         self.part_hover_cover_image   .fill((90,90,90))
         self.not_buy_image            .fill((90,90,90))
+        self.locked_image             .fill((0,0,0))
 
         self.part_hover_cover_image   .set_alpha(150)
         self.not_buy_image            .set_alpha(150)
@@ -109,8 +115,8 @@ class part:
                         else:
                             self.side_show = False
                         
-        # 按鈕
-        if self.buy_button.handle_event(self.screen.event) and  self.check_can_buy():
+        # 按鈕                                                                              顯示時才可按
+        if self.buy_button.handle_event(self.screen.event) and  self.check_can_buy() and self.side_show:
             self.bought = True
             self.buy()
             self.buy_button.create_text("bought")
@@ -120,11 +126,26 @@ class part:
     def draw(self):
         self.screen.screen.blit(self.part_image,self.part_rect)
 
-        if self.hovering :
-            self.screen.screen.blit(self.part_hover_cover_image,self.part_rect)
+        if self.unlock :
+            if self.hovering :
+                self.screen.screen.blit(self.part_hover_cover_image,self.part_rect)
 
-        if not self.bought:
-            self.screen.screen.blit(self.not_buy_image,self.part_rect)
+            if not self.bought:
+                self.screen.screen.blit(self.not_buy_image,self.part_rect)
+
+        else:
+            self.screen.screen.blit(self.locked_image , self.part_rect)
+
+    def draw_line(self):
+        """
+        最底層
+        """
+        if self.unlock:
+            for nupd in self.unlockneed:
+                    if nupd in self.screen.upgrade.main_upgrades:
+                        p1 = self.screen.upgrade.main_upgrades[nupd] .part_rect.center
+                        p2 = self.part_rect.center
+                        pygame.draw.line(self.screen.screen,(100,100,100),p1,p2,5)
 
     def draw_side(self):
         """
@@ -136,3 +157,15 @@ class part:
             self.screen.screen.blit(self.side_title_image,self.side_title_rect)
             draw_text(self.screen.screen,self.Description,self.side_Description_font,(255,255,255) , (self.side_rect.x +20 , self.side_title_height,self.side_width,self.side_Description_height) , 30)
             draw_text(self.screen.screen,self.cost       ,self.side_cost_font       ,(255,255,255) , (self.side_rect.x +20 , self.side_title_height + self.side_Description_height ,self.side_width,self.side_cost_height) , 30)
+
+    def check_unlock(self ):
+        """
+        確定是否解鎖
+        """
+        self.unlock = True
+        upgrade_state = self.screen.upgrade.main_upgrades
+        for needupd in self.unlockneed:
+            if needupd in upgrade_state :
+                if upgrade_state[needupd] . bought == False:
+                    self.unlock = False
+            

@@ -31,7 +31,8 @@ class upgrade:
 
         # Upgrades
         self.main_upgrades = {
-            "first upgrade" : firstUpd(self.screen)
+            "first upgrade" : firstUpd(self.screen),
+            "second upgrade": secondUpd(self.screen)
         }
 
     def update(self):
@@ -42,6 +43,8 @@ class upgrade:
             # button
             if self.closeButton.check_clicked(self.screen.event): self.screen.scene = SCENE_MAIN
             # parts
+            for upd in self.main_upgrades :
+                self.main_upgrades[upd].check_unlock()
             for _upgrade in self.main_upgrades:
                 self.main_upgrades[_upgrade] .update((0,0))
             
@@ -57,6 +60,8 @@ class upgrade:
 
             self.screen.screen.blit(self.image,self.rect)
             # parts
+            for _upgrade in self.main_upgrades:
+                self.main_upgrades[_upgrade] .draw_line()
             for _upgrade in self.main_upgrades:
                 self.main_upgrades[_upgrade] .draw()
 
