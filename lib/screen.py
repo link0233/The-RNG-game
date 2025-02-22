@@ -1,6 +1,7 @@
 import pygame
 import json
 from config import *
+import time
 
 #from lib.key import *
 from lib.GUI.quitButton import *
@@ -20,6 +21,9 @@ class screen():
         self.screen = pygame.display.set_mode((0,0),pygame.FULLSCREEN)
         self.size = self.screen.get_size()
         self.clock = pygame.time.Clock()
+        self.now_time = time.time()
+        self.delta_time = 0
+        self.last_time = time.time()
 
         loadingfont = pygame.font.Font("./font/Ubuntu/Ubuntu-Bold.ttf",100)
         loadingimage = loadingfont.render("Loading",True,(255,255,255))
@@ -74,7 +78,9 @@ class screen():
 
     def update(self):
         self.event = pygame.event.get()
-        SCREEN_EVENT = self.event
+        self.now_time = time.time()
+        self.delta_time = self.now_time - self.last_time
+        self.last_time = self.now_time
 
         if self.scene == 0 : self.quitButton.update()
         self.roll.update()

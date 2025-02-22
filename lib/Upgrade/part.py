@@ -5,7 +5,7 @@ from lib.GUI.button import Button
 from lib.functions.functions import draw_text
 
 class part:              
-    def __init__(self , screen , pos :list , title: str , Description : str , cost :str , unlockneed :list):
+    def __init__(self , screen , pos :list , title: str , Description : str , cost :str , unlockneed :list , pay_need :list):
         """
         screen : screen
         pos : (x ,y) 所處位置
@@ -13,7 +13,7 @@ class part:
         Description : 說明文字
         cost : 需要的錢錢文字
         unlockneed : 解鎖需要升級 ["升級名稱"] ,若為空則直接解鎖
-        必須附上 ， check_can_buy 以及 pay 函式處理購買事件
+        pay_need : 購買所需要的物品 [ "物品名稱" , 數量 ]
         """
         self.screen = screen
         self.title = title
@@ -21,6 +21,7 @@ class part:
         self.cost = cost
         self.unlockneed = unlockneed
         self.pos = pos
+        self.pay_need = pay_need
 
         # state
         self.hovering = False
@@ -47,15 +48,19 @@ class part:
         self.side_image                = pygame.Surface((self.side_width,self.side_height))
         self.part_hover_cover_image    = pygame.Surface((self.part_width,self.part_height))
         self.not_buy_image             = pygame.Surface((self.part_width,self.part_height))
-        self.locked_image              = pygame.Surface((self.part_width,self.part_height))
+        #self.locked_image              = pygame.Surface((self.part_width,self.part_height))
 
-        self.part_image               .fill((255,255,255))
+        #self.part_image               .fill((255,255,255))
         self.side_image               .fill((150,150,150))
-        self.part_hover_cover_image   .fill((90,90,90))
-        self.not_buy_image            .fill((90,90,90))
-        self.locked_image             .fill((0,0,0))
+        #self.part_hover_cover_image   .fill((90,90,90))
+        #self.not_buy_image            .fill((90,90,90))
+        #self.locked_image             .fill((0,0,0))
 
-        self.part_hover_cover_image   .set_alpha(150)
+        pygame.draw.rect(self.part_image,(255,255,255) , (0,0,self.part_width , self.part_height),border_radius = 10)
+        pygame.draw.rect(self.part_hover_cover_image,(90,90,90) , (0,0,self.part_width , self.part_height),border_radius = 10)
+        pygame.draw.rect(self.not_buy_image,(90,90,90) , (0,0,self.part_width , self.part_height),border_radius = 10)
+
+        self.part_hover_cover_image   .set_alpha(100)
         self.not_buy_image            .set_alpha(150)
 
         # text
@@ -121,20 +126,19 @@ class part:
             self.buy()
             self.buy_button.create_text("bought")
             self.buy_button.color = (200,200,200)
-            self.buy_button.color = (100,100,100)
+            self.buy_button.hover_color = (100,100,100)
 
     def draw(self):
-        self.screen.screen.blit(self.part_image,self.part_rect)
-
         if self.unlock :
+            self.screen.screen.blit(self.part_image,self.part_rect)
             if self.hovering :
                 self.screen.screen.blit(self.part_hover_cover_image,self.part_rect)
 
             if not self.bought:
                 self.screen.screen.blit(self.not_buy_image,self.part_rect)
 
-        else:
-            self.screen.screen.blit(self.locked_image , self.part_rect)
+        # else:
+        #     self.screen.screen.blit(self.locked_image , self.part_rect)
 
     def draw_line(self):
         """
@@ -169,3 +173,16 @@ class part:
                 if upgrade_state[needupd] . bought == False:
                     self.unlock = False
             
+    def check_can_buy(self):
+        for p in self.pay_need:
+            if p[0] == "cash":
+                if not self.screen.inventory.inventoryData["cash"] >= p[1]: return False
+                #else: return False
+
+        return True
+    
+    def buy(self):
+        for p in self.pay_need:
+            if p[0] == "cash":
+                self.screen.inventory.inventoryData["cash"] -= p[1]
+               
