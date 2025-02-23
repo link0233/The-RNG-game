@@ -19,7 +19,12 @@ class upgrade:
         size = self.screen.size
         # button
         self.open_button = imageButtonChangeBg("./images/button/Upgrade.png" , 0,size[1]//2+ 2* size[1]//10 , size[1]//10-5 , size[1]//10-5,50,border_radius=10)
-        self.closeButton = imageButtonChangeBg("./images/button/close.png",0,0,size[1]//10,size[1]//10,50,border_radius=10,bg_color=(255, 0, 0),hover_bg_color=(104, 6, 6))
+        self.closeButton = imageButtonChangeBg("./images/button/close.png",0,0,size[1]//10,size[1]//10,255,border_radius=10,bg_color=(255, 0, 0),hover_bg_color=(104, 6, 6))
+        self.homeButton  = imageButtonChangeBg("./images/button/upgrade_home.png",0 , size[1] //10*9,size[1]//10,size[1]//10,50,bg_color=(200,200,200),hover_bg_color=(100,100,100) , border_radius=10)
+
+        # boost
+        self.luckboost = 1
+        self.cashboost = 1
 
         # images
         self.image = pygame.Surface(size)
@@ -38,8 +43,8 @@ class upgrade:
 
         # Upgrades
         self.main_upgrades = {
-            "first upgrade" : part(screen,(0,0),"first upgrade" , "the first upgrade" , "$100",[],[["cash" , 100]]),#firstUpd(self.screen),
-            "second upgrade": part(screen,(1,1),"second upgrade" , "the second upgrade" , "$100" , ["first upgrade"] , [["cash",100]])
+            "first upgrade" : part(screen,(0,0),"first upgrade" , "the first upgrade, It's boost your luck" , "$100",[],[["cash" , 100]],"luck"),#firstUpd(self.screen),
+            "second upgrade": part(screen,(1,1),"second upgrade" , "the second upgrade, It's boost your cash" , "$100" , ["first upgrade"] , [["cash",100]] , "cash")
         }
 
     def update(self):
@@ -76,6 +81,7 @@ class upgrade:
 
             # button
             if self.closeButton.check_clicked(self.screen.event): self.screen.scene = SCENE_MAIN
+            if self.homeButton.check_clicked(self.screen.event) : self.map_pos = [0,0]
             # parts
             for upd in self.main_upgrades :
                 self.main_upgrades[upd].check_unlock()
@@ -104,6 +110,7 @@ class upgrade:
                 self.main_upgrades[_upgrade] .draw_side()
 
             self.closeButton.draw(self.screen.screen)
+            self.homeButton.draw(self.screen.screen)
 
     def load(self):
         with open("./saves/upgrade.json" , "r") as f:
@@ -111,6 +118,8 @@ class upgrade:
             if "first upgrade" in data:
                 if data["first upgrade"] > 0:
                     self.main_upgrades["first upgrade"].bought = True
+
+        self.update_boost()
 
     def save(self):
         data = {}
@@ -120,3 +129,14 @@ class upgrade:
 
         with open("./saves/upgrade.json" , "w") as f:
             json.dump(data,f)
+
+    def update_boost(self):
+        # reset
+        self.luckboost = 1
+        self.cashboost = 1
+
+        # set
+        if self.main_upgrades["first upgrade"].bought:
+            self.luckboost *= 1.05
+        if self.main_upgrades["second upgrade"].bought:
+            self.cashboost *= 1.5

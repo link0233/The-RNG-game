@@ -1,3 +1,4 @@
+import pygame
 def format_to_two_decimal_places(number_str):
     """
     保留兩位小數的整數字符串。
@@ -75,3 +76,23 @@ def LongNumberToText(n :float):
         k +=1
 
     return nt
+
+def draw_hollow_circle(surface, center, radius, border_width,color, alpha):
+    """
+    繪製一個透明內部的圓，外框透明度變化
+    :param surface: 畫布
+    :param center: 圓心座標 (x, y)
+    :param radius: 圓的半徑
+    :param border_width: 外框粗細
+    :param alpha: 透明度 (0~255)
+    """
+    # 建立透明 Surface
+    circle_surface = pygame.Surface((radius * 2, radius * 2), pygame.SRCALPHA)
+    circle_surface.fill((0, 0, 0, 0))  # 設為完全透明
+
+    # 畫圓，並設定透明度
+    color_with_alpha = (color[0], color[1], color[2], alpha)
+    pygame.draw.circle(circle_surface, color_with_alpha, (radius, radius), radius, border_width)
+
+    # 貼到主畫面
+    surface.blit(circle_surface, (center[0] - radius, center[1] - radius))

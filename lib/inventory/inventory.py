@@ -85,6 +85,7 @@ class inventory:
         self.ItemUI.update()
         self.cash_boost = 1
         self.cash_boost *=( self.screen.Achievement.achievementData["cash"]["level"] *0.1 +1)
+        self.cash_boost *= self.screen.upgrade.cashboost
 
     def draw(self):
         self.ItemUI.draw()

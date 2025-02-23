@@ -133,6 +133,7 @@ class rollUI:
         # 處理所有的加成
         self.baseLuckBoost = 1
         self.baseLuckBoost *= self.screen.Achievement.totalLuckBoost
+        self.baseLuckBoost *= self.screen.upgrade.luckboost
         self.roll.luckboost = self.baseLuckBoost * self.screen.setting.ChangeLuckBoost.downLuck * self.testLuckboost
 
         self.RollTimeRate.interval = self.rollDelay
