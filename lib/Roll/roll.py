@@ -192,6 +192,8 @@ class rollUI:
             self.screen.inventory.inventoryData[getItemType][itemget] = self.screen.inventory.item_list[  itemget ].get_boost()
 
         self.show_image = itemget
+        # 資源取得
+        self.screen.states.experience.xp += get
         #確定之後撥放動畫
         print(itemget)
         self.rollAnimation.playAnimation(itemget,self.RollTimeRate.interval)

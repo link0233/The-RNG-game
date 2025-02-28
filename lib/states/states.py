@@ -3,14 +3,18 @@ import json
 import time
 
 from lib.states.buttons import *
+from lib.states.experience import *
 from lib.GUI.imageButton import imageButtonChangeBg
 
 class states:
     def __init__(self,screen):
         pygame.font.init()
-        self.states = {"rolls" : 0 , "playtime":0}# playtime : s
+        self.states = {"rolls" : 0 , "playtime":0 , "experience" :0 , "level":0 }# playtime : s
         self.last_time = time.time()
         self.screen = screen
+
+        # state classes
+        self.experience = experience(self.screen)
 
         arial = pygame.font.match_font("arial")
         self.statesFont = pygame.font.Font(arial,30)
@@ -28,6 +32,8 @@ class states:
         self.closeButton: closeStatesButton = closeStatesButton(self.screen)
 
     def update(self):
+        # 其他資料
+        self.experience.update()
         #計算時間
         current_time = time.time()
         self.states["playtime"] += current_time - self.last_time
@@ -41,6 +47,9 @@ class states:
             if self.closeButton.handle_event(self.screen.event) : self.screen.scene = 0
 
     def draw(self):
+        # 其他的交給他自己處理
+        self.experience.draw()
+        
         if self.screen.scene == 0 : self.openButton.draw(self.screen.screen)
         if self.screen.scene == 2 :
             self.screen.screen.blit(self.bgImage,self.bgrect)
@@ -65,10 +74,19 @@ class states:
 
     def load(self):
         with open("./saves/states.json","r") as f : stateData = json.load(f)
-        if "rolls" in stateData   : self.states["rolls"]    = stateData["rolls"]
-        if "playtime" in stateData: self.states["playtime"] = stateData["playtime"]
+        for state_name in self.states:
+            if state_name in stateData   : self.states[state_name]    = stateData[state_name]
+        # if "playtime" in stateData: self.states["playtime"] = stateData["playtime"]
+
+        # experience
+        self.experience.xp = self.states["experience"]
+        self.experience.level = self.states["level"]
+        
 
     def save(self): 
         #print(self.states)
+        self.states["experience"] = self.experience.xp
+        self.states["level"]      = self.experience.level
+
         with open("./saves/states.json" , "w") as f: 
             json.dump(self.states,f)
