@@ -58,4 +58,6 @@ class experience:
         """
         輸入xp 並且 xp 未加成，會自動計算加成並且進行升等等作業
         """
+        self.xp_boost = 1
+        self.xp_boost *= self.screen.updgrade.xpboost
         self.xp += xp * self.xp_boost * self.test_xp_boost

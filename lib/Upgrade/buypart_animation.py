@@ -15,17 +15,17 @@ class buypart_animation:
         self.end = False
 
         if self.type == "cash" or self.type =="luck" or self.type =="xp" or self.type =="point":
-            self.circle_r_plus = 150
-            self.line_grow_speed = 0.05
+            self.circle_r_plus = 300
+            self.line_grow_speed = 0.02
             self.circle_grow_speed = 0.2
-            self.line_movespeed = 190
+            self.line_movespeed = 380
             self.line_length = 80
             self.transparency = 255
 
             self.circle_created = 0
             self.line_created = 0
-            self.circle_create_max = 2
-            self.line_created_max = 50
+            self.circle_create_max = 3
+            self.line_created_max = 100
 
             self.start_time = time.time()
             self.t = self.start_time
@@ -61,6 +61,10 @@ class buypart_animation:
             if self.circles[i][1] < 1 or self.circles[i][2]<=0 :
                 self.circles[i][2] = 0
                 self.circles[i][1] = 1
+
+        # 超過4秒直接算結束
+        if self.t >= 4:
+            self.end = True
 
         # create
         lines = int(self.t/self.line_grow_speed)
