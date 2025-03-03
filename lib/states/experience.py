@@ -1,19 +1,22 @@
 import pygame
+import math
 from config import *
 
 from lib.GUI.label import label
+from lib.functions.bigNumber import BigNumber
 
 class experience:
     def __init__(self,screen):
         self.screen = screen
 
         # state
-        self.xp = 0 # xp 為此等到下等的所獲得的經驗值，而非全部的經驗值
+        self.xp = BigNumber(0) # xp 為此等到下等的所獲得的經驗值，而非全部的經驗值
         self.level = 0 
-        self.next_level_req = 0
-        self.xp_boost = 1 
-        self.test_xp_boost = 1
+        self.next_level_req = BigNumber(0)
+        self.xp_boost = BigNumber(1) 
+        self.test_xp_boost = BigNumber(1)
         self.schedule : float = 0 # 進度
+        self.log10_1_25 = math.log10(1.25)
 
         # images
         self.show_w = self.screen.size[0]//2
@@ -42,10 +45,10 @@ class experience:
 
             # progress bar
             pygame.draw.rect(self.screen.screen , self.progress_bar_bg_color ,(self.progress_bar_x,self.progress_bar_y,self.progress_bar_w,self.progress_bar_h) , border_radius= self.progress_bar_h //2)
-            pygame.draw.rect(self.screen.screen , self.progress_bar_color    ,(self.progress_bar_x,self.progress_bar_y,self.progress_bar_w * self.schedule,self.progress_bar_h ) , border_radius= self.progress_bar_h //2)
+            pygame.draw.rect(self.screen.screen , self.progress_bar_color    ,(self.progress_bar_x,self.progress_bar_y,self.progress_bar_w * float(self.schedule.__repr__()),self.progress_bar_h ) , border_radius= self.progress_bar_h //2)
 
     def update_level(self):
-        self.next_level_req = 1.25 ** self.level
+        self.next_level_req = BigNumber(1.25) ** self.level
         while self.xp >= self.next_level_req:
             if self.xp >= self.next_level_req:
                 self.xp -= self.next_level_req

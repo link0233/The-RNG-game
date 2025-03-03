@@ -7,11 +7,12 @@ from lib.states.experience import *
 from lib.states.point import *
 from lib.GUI.label import label
 from lib.GUI.imageButton import imageButtonChangeBg
+from lib.functions.bigNumber import BigNumber
 
 class states:
     def __init__(self,screen):
         pygame.font.init()
-        self.states = {"rolls" : 0 , "playtime":0 , "experience" :0 , "level":0 , "point" : 0 , "point_index" : 0}# playtime : s
+        self.states = {"rolls" : 0 , "playtime":0 , "experience" :0 , "level":0 , "point" : 0 , "point_exp" : 0}# playtime : s
         self.last_time = time.time()
         self.screen = screen
 
@@ -88,17 +89,18 @@ class states:
         # if "playtime" in stateData: self.states["playtime"] = stateData["playtime"]
 
         # experience
-        self.experience.xp = self.states["experience"]
+        self.experience.xp = BigNumber(self.states["experience"])
         self.experience.level = self.states["level"]
 
         # point
-        self.point.point = self.states["point"]
-        self.point.point_index = self.states["point_index"]
+        self.point.point = BigNumber(self.states["point"])
+        #self.point.point_exp = BigNumber(self.states["point_exp"])
         
 
     def save(self): 
-        self.states["point"] = self.point.point
-        self.states["point_index"] = self.point.point_index
+        self.states["point"] = self.point.point.__repr__()
+        self.states["experience"]    = self.experience.xp.__repr__()
+        #self.states["point_exp"] = self.point.point_exp
  
         with open("./saves/states.json" , "w") as f: 
             json.dump(self.states,f)

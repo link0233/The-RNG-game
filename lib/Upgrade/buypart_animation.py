@@ -15,11 +15,11 @@ class buypart_animation:
         self.end = False
 
         if self.type == "cash" or self.type =="luck" or self.type =="xp" or self.type =="point":
-            self.circle_r_plus = 300
-            self.line_grow_speed = 0.02
-            self.circle_grow_speed = 0.2
-            self.line_movespeed = 380
-            self.line_length = 80
+            self.circle_r_plus = 600
+            self.line_grow_speed = 0.01
+            self.circle_grow_speed = 0.15
+            self.line_movespeed = 1600
+            self.line_length = 100
             self.transparency = 255
 
             self.circle_created = 0
@@ -50,14 +50,14 @@ class buypart_animation:
         # update
         for i in range(len(self.lines)):
             self.lines[i][1] += dt *self.line_movespeed
-            self.lines[i][2] -= dt *180
+            self.lines[i][2] -= dt *360
             if self.lines[i][2]<= 0:
                 self.lines[i][2]  = 0
 
         for i in range(len(self.circles)):
             self.circles[i][0] += dt *self.circle_r_plus
             self.circles[i][1] -= 0.01
-            self.circles[i][2] -= dt *180
+            self.circles[i][2] -= dt *360
             if self.circles[i][1] < 1 or self.circles[i][2]<=0 :
                 self.circles[i][2] = 0
                 self.circles[i][1] = 1

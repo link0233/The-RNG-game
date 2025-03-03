@@ -45,7 +45,8 @@ def draw_text(screen, text, font, color, rect, line_height, antialias=True):
             line = word + " "
 
         # 如果超出高度限制，停止繪製
-        if y + line_height > h:
+        #if y + line_height > h:
+        if line_height > h:
             # print("error")
             # d = int("3as")
             break

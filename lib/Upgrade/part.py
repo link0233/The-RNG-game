@@ -5,6 +5,7 @@ from lib.GUI.button import Button
 from lib.Upgrade.buypart_animation import buypart_animation
 from lib.functions.functions import draw_text
 from lib.GUI.label import label
+from lib.functions.bigNumber import BigNumber
 
 class part:              
     def __init__(self , screen , pos :list , title: str , Description : str , cost :str , unlockneed :list , pay_need :list , type: str , max_level :int = 1):
@@ -96,7 +97,7 @@ class part:
         self.side_rect.topright       = (self.screen.size[0] , 0)
         self.side_title_rect.center   = (self.side_width // 2 + self.side_rect.x ,self.side_title_height //2)
         # label
-        self.side_level_label          = label("[0/1]" , (self.side_rect.x,self.side_title_height , self.side_width , self.side_level_h) , (255,255,255),-1,"./font/Ubuntu/Ubuntu-Bold.ttf")
+        self.side_level_label          = label("[0/1]" , (self.side_rect.x,self.side_title_height , self.side_width , self.side_level_h) , (255,255,255),-1,"center","./font/Ubuntu/Ubuntu-Bold.ttf")
 
     def all_set_update(self):
         """
@@ -117,7 +118,7 @@ class part:
             self.buy_animation.update()
         # 處理按鈕顏色
         # 沒有購買時
-        if not self.bought:
+        if self.level < self.max_level:
             canbuy = self.check_can_buy()
             if canbuy :
                 self.buy_button.color = (0,255,0)
@@ -166,8 +167,10 @@ class part:
                 self.buy_button.color = (200,200,200)
                 self.buy_button.hover_color = (100,100,100)
                 self.buy_button.create_text("maxed")
-            if self.level< self.max_level :
-                self.buy_button.create_text("buy")
+            # if self.level< self.max_level :
+            #     self.buy_button.color = (200,200,200)
+            #     self.buy_button.hover_color = (100,100,100)
+            #     self.buy_button.create_text("buy")
 
             
             self.screen.upgrade.update_boost() # 購買後載入
@@ -199,10 +202,10 @@ class part:
         """
         if self.unlock:
             for nupd in self.unlockneed:
-                    if nupd in self.screen.upgrade.main_upgrades:
-                        p1 = self.screen.upgrade.main_upgrades[nupd] .part_rect.center
-                        p2 = self.part_rect.center
-                        pygame.draw.line(self.screen.screen,(100,100,100),p1,p2,5)
+                if nupd in self.screen.upgrade.main_upgrades:
+                    p1 = self.screen.upgrade.main_upgrades[nupd] .part_rect.center
+                    p2 = self.part_rect.center
+                    pygame.draw.line(self.screen.screen,(100,100,100),p1,p2,5)
 
     def draw_side(self):
         """
@@ -235,7 +238,9 @@ class part:
             if p[0] == "point":
                 # if self.title == "point upgrade #1" :
                 #     print(self.screen.states.point.size(p[1][0] * (self.level +1),p[1][1]))
-                if self.screen.states.point.size(p[1][0] * (self.level +1),p[1][1]) == 1 : return False
+                #if self.screen.states.point.size(p[1][0] * (self.level +1),p[1][1]) == 1 : return False
+                #print(p)
+                if self.screen.states.point.point <= BigNumber(p[1]) * (self.level +1) : return False 
                 #else: return False
         if self.level >= self.max_level: return False
 
@@ -246,5 +251,5 @@ class part:
             if p[0] == "cash":
                 self.screen.inventory.inventoryData["cash"] -= p[1]
             if p[0] == "point":
-                self.screen.states.point.add_point_noboost(-p[1][0],p[1][1])
+                self.screen.states.point.point -= BigNumber(p[1]) * (self.level +1)
                

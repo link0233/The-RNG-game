@@ -5,6 +5,7 @@ class label:
                         rect ,
                         text_color = (255,255,255),
                         text_size : int = -1,
+                        text_position : str = "center",
                         text_font : str = "arial",
                         antialiab : bool = True,
                         background  : bool = False,
@@ -17,7 +18,8 @@ class label:
         :param rect: 位置(x,y,w,h)
         :param text_color: 字的顏色，預設為白色
         :param text_size: 字的大小，預設會根據大小調整
-        :param text_font: 字體，預設為arial
+        :param text_font: 
+        :param text_position : "center" 中間 , "left" 左邊
         :param antialiab: 是否啟用抗拒尺
         :param background: 是否啟用背景，預設為否
         :param background_color: 背景顏色，預設為黑
@@ -28,6 +30,7 @@ class label:
         self.rect = rect
         self.text_color = text_color
         self.text_size = text_size
+        self.text_pos = text_position
         self.font = text_font
         self.antialiab = antialiab
         self.background = background
@@ -55,7 +58,11 @@ class label:
         if background :
             self.image.blit(self.background_image , (0,0,self.rect[2],self.rect[3]))
         self.text_rect = self.text_image.get_rect()
-        self.text_rect.center = (self.rect[2]//2 , self.rect[3]//2)
+        if self.text_pos == "center":
+            self.text_rect.center = (self.rect[2]//2 , self.rect[3]//2)
+        elif self.text_pos == "left":
+            self.text_rect.x = 0
+            self.text_rect.centery = self.rect[3]//2
         self.image.blit(self.text_image ,self.text_rect)
 
         # rect
@@ -81,7 +88,11 @@ class label:
         self.text_image = self.text_font.render(self.text,self.antialiab,self.text_color)
         if self.background : self.image.blit(self.background_image , (0,0,self.rect[2],self.rect[3]))
         self.text_rect = self.text_image.get_rect()
-        self.text_rect.center = (self.rect[2]//2 , self.rect[3]//2)
+        if self.text_pos == "center":
+            self.text_rect.center = (self.rect[2]//2 , self.rect[3]//2)
+        elif self.text_pos == "left":
+            self.text_rect.x = 0
+            self.text_rect.centery = self.rect[3]//2
         self.image.blit(self.text_image ,self.text_rect)
 
 # pygame.init()
