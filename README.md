@@ -16,6 +16,12 @@
 4. **common、uncommon......:** $level =  \frac{log_2 (\frac{該物品總數量}{8})}{10}$
 5. **effrotless** : $1 + (log_{1.35} -15) *0.1 luck$
 6. **其他難度系列** : $ 上一個難度獲得數量*= 數量* 0.1$
+# 統計值升級公式
+1. **point 0:** $cost = 10^5 * 4^{level} , boost = 2^{level}$
+2. **point 1:** $cost = 10^8 * 6^{level} , boost = 3^{level}$
+
+1. **experience 0:** $cost = 5 + 5 * level , boost = 1.5^{level}$
+2. **experience 1:** $cost = 5 + 3 * level , boost = 2^{level}$
 # 其他公式
 1. **等級 :** $下一等等及需求  = 1.25^{level+1}$
 # 備註
@@ -23,6 +29,22 @@
 ###### 如真想改的話直接從存檔改，如果你要真的完成就感的話，就別改了八，我懶得管
 
 # updates
+# v1.1.5.14
+1. 修改統計值介面
+    * 重作抽數與遊玩時間顯示
+    * 興增標題
+    * 可以用滑鼠滾輪移動
+    * 數值每秒更新一次
+2. debug
+    * 部分升級扣錢扣兩倍
+3. 興增
+    * state 升級
+        * 兩個 point
+        * 兩個 experience
+    * state 介面有point 和 experience
+    * 兩個升級
+4. 算法修改
+    * level 換成bignumber
 # v1.1.4.55
 1. 修改介面
     * 修改了升級返回原點按鈕樣式

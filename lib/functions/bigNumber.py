@@ -150,7 +150,7 @@ class BigNumber:
 
         # 運算公式：(a × 10^b) ^ n = a^n × 10^(b * n)
         new_mantissa = self.mantissa ** other
-        new_exponent = self.exponent * other
+        new_exponent = int(self.exponent * other)
 
         result = BigNumber(f"{new_mantissa}e{new_exponent}")
         result.normalize()

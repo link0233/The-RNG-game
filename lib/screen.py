@@ -62,6 +62,8 @@ class screen():
         loadingfont = None
         loadingimage = None
         rect = None
+
+        self.states.all_set_update()
         
     def draw(self):
         self.screen.fill(SCREEN_BGCOLOR)

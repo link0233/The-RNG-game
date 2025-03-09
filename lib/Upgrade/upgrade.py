@@ -80,7 +80,10 @@ class upgrade:
             "point upgrade #8" : part(screen,(7,-10),"point upgrade #8" , "It's boost your point" , "26000 point",["point upgrade #5"],[["point" ,"2.6e4"]],"point"),
             "point upgrade #9" : part(screen,(7,-9),"point upgrade #9" , "It's boost your point" , "100000 point",["point upgrade #5"],[["point" , "1e5"]],"point"),
             "point upgrade #10" : part(screen,(8,-10),"point upgrade #10" , "It's boost your point" , "200000 point",["point upgrade #8"],[["point" , "2e5"]],"point"),
-            "point upgrade #11" : part(screen,(9,-10),"point upgrade #11" , "It's boost your point" , "5e6 point",["point upgrade #10"],[["point" , "5e6"]],"point" , 20)
+            "point upgrade #11" : part(screen,(9,-10),"point upgrade #11" , "It's boost your point" , "5e6 point",["point upgrade #10"],[["point" , "5e6"]],"point" , 20),
+
+            "unlock something #1"        : part(screen,(10,-10),"unlock something #1" , "unlock ???" , "1e7 point",["point upgrade #11"],[["point" , "1e7"]],"point"),
+            "unlock something #2"        : part(screen,(10,-8),"unlock something #2" , "unlock ???" , "1e11 point",["unlock something #1", "luck upgrade #2"],[["point" , "1e11"]],"xp")
         }
 
         # left-bottom states show
@@ -92,9 +95,9 @@ class upgrade:
 
     def update(self):
         # point
-        if not self.main_upgrades["unlock point"].bought:
-            # 沒購買時point 歸0
-            self.screen.states.point.point = BigNumber(0)
+        # if not self.main_upgrades["unlock point"].bought:
+        #     # 沒購買時point 歸0
+        #     self.screen.states.point.point = BigNumber(0)
             #self.screen.states.point.point_exp = 0
 
         if self.screen.scene == SCENE_MAIN :
@@ -262,6 +265,15 @@ class upgrade:
             self.point_boost *= 3 * self.main_upgrades["point upgrade #10"].level
         if self.main_upgrades["point upgrade #11"].bought:
             self.point_boost *= 2 * self.main_upgrades["point upgrade #11"].level
+
+        if self.main_upgrades["unlock something #1"].bought:
+            self.screen.states.point.state_unlock = True
+        else :
+            self.screen.states.point.state_unlock = False
+        if self.main_upgrades["unlock something #2"].bought:
+            self.screen.states.experience.state_unlock = True
+        else :
+            self.screen.states.experience.state_unlock = False
 
         # try:
         #     a = int(math.log10(self.point_boost))

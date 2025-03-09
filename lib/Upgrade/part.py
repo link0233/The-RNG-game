@@ -155,7 +155,7 @@ class part:
         # 按鈕                                                                              顯示時才可按
         if self.buy_button.handle_event(self.screen.event) and  self.check_can_buy() and self.side_show:
             self.bought = True
-            self.level += 1
+            #self.level += 1
             self.side_level_label.change_text(f"[{self.level}/{self.max_level}]")
             self.buy()
 
@@ -252,4 +252,6 @@ class part:
                 self.screen.inventory.inventoryData["cash"] -= p[1]
             if p[0] == "point":
                 self.screen.states.point.point -= BigNumber(p[1]) * (self.level +1)
+
+        self.level += 1
                
