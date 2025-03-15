@@ -28,9 +28,12 @@ class BigNumber:
         # 只保留前 10 位有效數字
         self.mantissa = round(self.mantissa, 10)
 
-    def __repr__(self):
+    def __repr__(self , two_float = False):
         """ 以科學記號顯示數值 """
-        return f"{self.mantissa}e{self.exponent}"
+        if two_float:
+            return f"{self.mantissa:.2f}e{self.exponent}"   
+        else:
+            return f"{self.mantissa}e{self.exponent}"
 
     def normalize(self):
         """ 確保 mantissa 在 1 ≤ x < 10 之間 """

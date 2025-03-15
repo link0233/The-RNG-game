@@ -112,6 +112,13 @@ class part:
             elif self.max_level == self.level:
                 self.buy_button.create_text("maxed")
 
+            self.cost = ""
+            for cost in self.pay_need:
+                if cost[0] == "point" or cost[0] == "F":
+                    self.cost += str(BigNumber(cost[1]) * BigNumber(self.level +1)) + " " + str(cost[0]) + " , "
+                else:
+                    self.cost += str(cost[1] * (self.level +1)) + " " + str(cost[0]) + " , "
+
     def update(self , mapPos:list):
         # 更興動畫
         if self.buy_animation:
@@ -156,9 +163,8 @@ class part:
         if self.buy_button.handle_event(self.screen.event) and  self.check_can_buy() and self.side_show:
             self.bought = True
             #self.level += 1
-            self.side_level_label.change_text(f"[{self.level}/{self.max_level}]")
+            
             self.buy()
-
             if self.max_level == 1:
                 self.buy_button.color = (200,200,200)
                 self.buy_button.hover_color = (100,100,100)
@@ -174,7 +180,15 @@ class part:
 
             
             self.screen.upgrade.update_boost() # 購買後載入
-            self.buy_animation = buypart_animation(self.type) # 放動畫
+            self.side_level_label.change_text(f"[{self.level}/{self.max_level}]")
+            self.buy_animation = buypart_animation(self.type) # 
+            
+            self.cost = ""
+            for cost in self.pay_need:
+                if cost[0] == "point" or cost[0] == "F":
+                    self.cost += str(BigNumber(cost[1]) * BigNumber(self.level +1)) + " " + str(cost[0]) + " , "
+                else:
+                    self.cost += str(cost[1] * (self.level +1)) + " " + str(cost[0]) + " , "
 
         # 山動畫
         if self.buy_animation:
@@ -242,6 +256,9 @@ class part:
                 #print(p)
                 if self.screen.states.point.point <= BigNumber(p[1]) * (self.level +1) : return False 
                 #else: return False
+            if p[0] == "F":
+                if self.screen.states.F.F <= BigNumber(p[1]) * (self.level +1) : return False 
+
         if self.level >= self.max_level: return False
 
         return True
@@ -252,6 +269,8 @@ class part:
                 self.screen.inventory.inventoryData["cash"] -= p[1]
             if p[0] == "point":
                 self.screen.states.point.point -= BigNumber(p[1]) * (self.level +1)
+            if p[0] == "F":
+                self.screen.states.F.F -= BigNumber(p[1]) * (self.level +1)
 
         self.level += 1
                

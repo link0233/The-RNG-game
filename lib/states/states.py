@@ -5,6 +5,8 @@ import time
 from lib.states.buttons import *
 from lib.states.experience import *
 from lib.states.point import *
+from lib.states.F import *
+
 from lib.GUI.label import label
 from lib.GUI.imageButton import imageButtonChangeBg
 from lib.functions.bigNumber import BigNumber
@@ -13,13 +15,14 @@ from lib.functions.RateLimitedFunction import RateLimitedFunction
 class states:
     def __init__(self,screen):
         pygame.font.init()
-        self.states = {"rolls" : 0 , "playtime":0 , "experience" :0 , "level":0 , "point" : 0 , "point_exp" : 0}# playtime : s
+        self.states = {"rolls" : 0 , "playtime":0 , "experience" :0 , "level":0 , "point" : 0 , "point_exp" : 0 , "F" : 0}# playtime : s
         self.last_time = time.time()
         self.screen = screen
 
         # state classes
         self.experience = experience(self.screen)
         self.point      = point(self.screen)
+        self.F          = F(self.screen)
 
         # arial = pygame.font.match_font("arial")
         # self.statesFont = pygame.font.Font(arial,30)
@@ -59,6 +62,7 @@ class states:
         # 其他資料
         self.experience.update()
         self.point.update()
+        self.F.update()
 
         #print(self.states)
         self.states["experience"] = self.experience.xp
@@ -145,6 +149,7 @@ class states:
         self.states["point"] = self.point.point.__repr__()
         self.states["experience"]    = self.experience.xp.__repr__()
         self.states["level"] = self.experience.level.__repr__()
+        self.states["F"] = self.F.F.__repr__()
         #self.states["point_exp"] = self.point.point_exp
  
         with open("./saves/states.json" , "w") as f: 

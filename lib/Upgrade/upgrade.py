@@ -82,8 +82,11 @@ class upgrade:
             "point upgrade #10" : part(screen,(8,-10),"point upgrade #10" , "It's boost your point" , "200000 point",["point upgrade #8"],[["point" , "2e5"]],"point"),
             "point upgrade #11" : part(screen,(9,-10),"point upgrade #11" , "It's boost your point" , "5e6 point",["point upgrade #10"],[["point" , "5e6"]],"point" , 20),
 
+            "f upgrade #1532" : part(screen,(10,-5),"f upgrade #1532" , "nothing" , "",["unlock something #3"],[["F" , "1"]],"F" , 1000),
+
             "unlock something #1"        : part(screen,(10,-10),"unlock something #1" , "unlock ???" , "1e7 point",["point upgrade #11"],[["point" , "1e7"]],"point"),
-            "unlock something #2"        : part(screen,(10,-8),"unlock something #2" , "unlock ???" , "1e11 point",["unlock something #1", "luck upgrade #2"],[["point" , "1e11"]],"xp")
+            "unlock something #2"        : part(screen,(10,-8),"unlock something #2" , "unlock ???" , "1e11 point",["unlock something #1", "luck upgrade #2"],[["point" , "1e11"]],"xp"),
+            "unlock something #3"        : part(screen,(10,-6),"unlock something #3" , "unlock ???" , "1e13 point",["unlock something #1", "luck upgrade #2"],[["point" , "1e13"] , ["cash" , 5_000_000]],"F")
         }
 
         # left-bottom states show
@@ -92,6 +95,8 @@ class upgrade:
         self.lb_label_h    = self.screen.size[1]//20
         self.cash_label    = label("1234",(10 , self.screen.size[1] - (self.lb_label_h +10 ) * 1 , self.screen.size[0] , self.lb_label_h),(53, 255, 107) ,text_position= "left",text_font= "./font/Lato/Lato-Light.ttf")
         self.point_label   = label("1234",(10 , self.screen.size[1] - (self.lb_label_h +10 ) * 2 , self.screen.size[0] , self.lb_label_h),(255,255,255)  ,text_position= "left",text_font= "./font/Lato/Lato-Light.ttf")
+        self.F_label       = label("1234",(10 , self.screen.size[1] - (self.lb_label_h +10 ) * 3 , self.screen.size[0] , self.lb_label_h),(255,255,255)  ,text_position= "left",text_font= "./font/Lato/Lato-Light.ttf")
+
 
     def update(self):
         # point
@@ -172,6 +177,7 @@ class upgrade:
             # labels
             self.cash_label.draw(self.screen.screen)
             self.point_label.draw(self.screen.screen)
+            self.F_label.draw(self.screen.screen)
 
     def load(self):
         with open("./saves/upgrade.json" , "r") as f:
@@ -286,4 +292,6 @@ class upgrade:
         cash = self.screen.inventory.inventoryData["cash"]
         state = self.screen.states.states
         self.cash_label.change_text(f"${cash:.0f}")
-        self.point_label.change_text(f"{self.screen.states.point.point} points (+{self.screen.states.point.point_boost} points /s)")
+        self.point_label.change_text(f"{self.screen.states.point.point.__repr__(True)} points (+{self.screen.states.point.point_boost.__repr__(True)} points /s)")
+        self.F_label.change_text(f"{self.screen.states.F.F.__repr__(True)} F (+{self.screen.states.F.F_boost.__repr__(True)} F /s)")
+
