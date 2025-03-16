@@ -56,13 +56,13 @@ class experience:
 
     def all_set_update(self):
         upgrade = "0"
-        self.state_upgrades[upgrade]["level"] += 1
+        #self.state_upgrades[upgrade]["level"] += 1
         self.state_upgrades[upgrade]["cost"] = BigNumber(5)+ BigNumber(5) * self.state_upgrades[upgrade]["level"]
         self.state_upgrades[upgrade]["boost"] = BigNumber(1.5) ** self.state_upgrades[upgrade]["level"]
         self.state_upgrades[upgrade]["image"].text_label.change_text(f"x{self.state_upgrades[upgrade]["boost"]} xp , cost:{self.state_upgrades[upgrade]["cost"]} level")
 
         upgrade = "1"
-        self.state_upgrades[upgrade]["level"] += 1
+        #self.state_upgrades[upgrade]["level"] += 1
         self.state_upgrades[upgrade]["cost"] = BigNumber(5) +BigNumber(3) * self.state_upgrades[upgrade]["level"]
         self.state_upgrades[upgrade]["boost"] = BigNumber(2) ** self.state_upgrades[upgrade]["level"]
         self.state_upgrades[upgrade]["image"].text_label.change_text(f"x{self.state_upgrades[upgrade]["boost"]} points , cost:{self.state_upgrades[upgrade]["cost"]} level")
@@ -79,6 +79,7 @@ class experience:
             for upgrade in self.state_upgrades:
                 self.state_upgrades[upgrade]["image"].update((0,self.state_rect.y))
                 #if upgrade == "0":
+                print(self.state_upgrades[upgrade]["image"].click)
                 if self.state_upgrades[upgrade]["image"].click : self.buy(upgrade)
 
 
@@ -88,7 +89,9 @@ class experience:
         
 
         # schedule
-        self.schedule = self.xp / self.next_level_req
+        self.schedule = self.xp .__truediv__( self.next_level_req , True)
+        if self.xp<0:self.xp = 0
+        #print((self.schedule , self.xp , self.next_level_req))
 
     def draw(self):
         if self.screen.scene == SCENE_MAIN:
@@ -118,6 +121,7 @@ class experience:
         while self.xp >= self.next_level_req:
             if self.xp >= self.next_level_req:
                 self.xp -= self.next_level_req
+                if self.xp<0:self.xp = 0
                 self.level += 1
                 self.next_level_req = BigNumber(1.25) ** (self.level +1)
 

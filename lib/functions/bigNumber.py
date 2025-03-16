@@ -89,7 +89,7 @@ class BigNumber:
 
         return BigNumber(f"{new_mantissa}e{new_exponent}")
 
-    def __truediv__(self, other):
+    def __truediv__(self, other, float = False):
         """ 除法 a / b """
         if not isinstance(other, BigNumber):
             other = BigNumber(other)
@@ -100,8 +100,12 @@ class BigNumber:
         new_mantissa = self.mantissa / other.mantissa
         new_exponent = self.exponent - other.exponent
 
-        return BigNumber(f"{new_mantissa}e{new_exponent}")
-
+        if not float:
+            return BigNumber(f"{new_mantissa}e{new_exponent}")
+        else:
+            if new_exponent>18:return BigNumber(f"{new_mantissa}e{new_exponent}").to_int()
+            elif new_exponent< -18 : return 0.0
+            else: return new_mantissa * 10** new_exponent
 
     def __eq__(self, other):
         """ 判斷相等 """

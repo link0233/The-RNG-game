@@ -78,12 +78,18 @@ class point:
     def add_a_point(self):
         self.point_boost = BigNumber(1)
 
+        print(( self.state_upgrades["0"]["boost"], self.screen.upgrade.point_boost , self.screen.states.experience.get_point_boost()))
+
         self.point_boost *= self.state_upgrades["0"]["boost"]
+        self.point_boost *= self.state_upgrades["1"]["boost"]
         self.point_boost *= self.screen.upgrade.point_boost
         self.point_boost *= self.screen.states.experience.get_point_boost()
+
+        self.point_boost.normalize()
         #print(self.point)
         #print(self.point_boost)
         self.point = self.point + self.point_boost
+        self.point.normalize()
         #print( (self.point * (10 ** self.point_exp) , self.point_exp))
 
     def buy(self,upgrade):

@@ -87,10 +87,14 @@ class part:
                     a = ((value - last)/ (data["nextlevelreq_value"] - last)).to_int()
                     p_text = f"{state} / {data["nextlevelreq"]}"
                 except:
-                    a = ((value.to_int() - last.to_int())/ last.to_int())
+                    a = ((value.to_int() - last.to_int())/ last.to_int()).to_int()
                     p_text = f"{state} / {data["nextlevelreq"]}"
             #print(a)
         if a<0: a = 0
+        if isinstance(self.ProgressBar_image_size[0] , BigNumber):
+            self.ProgressBar_image_size[0] = self.ProgressBar_image_size[0].to_int()
+
+        a = 0
         pygame.draw.rect(self.ProgressBar_image,(51, 101, 7),(30,10,self.ProgressBar_image_size[0] - 60 , self.ProgressBar_image_size[1] -20),border_radius= self.ProgressBar_image_size[1]//2 - 10)
         pygame.draw.rect(self.ProgressBar_image,(74, 207, 255),(30,10,(self.ProgressBar_image_size[0] - 60) * a , self.ProgressBar_image_size[1] -20),border_radius= self.ProgressBar_image_size[1]//2 - 10)
         pt_image = self.ProgressBar_font.render(p_text,True,(0,0,1))
