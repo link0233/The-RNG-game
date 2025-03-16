@@ -153,13 +153,13 @@ class Achievement:
             if c != 0:
                 if isinstance(c, (int, float)):
                     self.achievementData[item]["level"] = int(math.log2(c/8))
-                    if self.achievementData[item]["level"] <0 : self.achievementData[item]["level"] = 0
+                    if self.achievementData[item]["level"] <0 : self.achievementData[item]["level"] = BigNumber(0)
                 if isinstance(c, (BigNumber)):
                     self.achievementData[item]["level"] = int((c/8).log2())
-                    if self.achievementData[item]["level"] <0 : self.achievementData[item]["level"] = 0
+                    if self.achievementData[item]["level"] <0 : self.achievementData[item]["level"] = BigNumber(0)
             else:
-                self.achievementData[item]["level"] = 0
-            self.achievementData[item]["boost"] = f"X{self.achievementData[item]["level"]* 0.1 +1 :.1f} {item}"
+                self.achievementData[item]["level"] = BigNumber(0)
+            self.achievementData[item]["boost"] = f"X{self.achievementData[item]["level"]* 0.1 +1 } {item}"
             self.achievementData[item]["nextlevelreq_value"] = (BigNumber(2)**((self.achievementData[item]["level"] +1)))*8
             self.achievementData[item]["nextlevelreq"] = f"{self.achievementData[item]["nextlevelreq_value"]} {item}"
             self.achievementData[item]["last_level"] = (BigNumber(2)**((self.achievementData[item]["level"] )))*8
@@ -169,23 +169,23 @@ class Achievement:
         totalroll = self.screen.inventory.inventoryData["cash"]
         self.achievementData["cash"]["now_value"] = totalroll
         self.achievementData["cash"]["now_state"] = f"$ " + LongNumberToText(totalroll)
-        if totalroll <= 0 : self.achievementData["cash"]["level"] = 0
+        if totalroll <= 0 : self.achievementData["cash"]["level"] = BigNumber(0)
         else: self.achievementData["cash"]["level"] = int(math.log10(totalroll/10))
-        self.achievementData["cash"]["boost"] = f"X{self.achievementData["cash"]["level"]* 0.1 +1 :.1f} Cash"
-        self.achievementData["cash"]["nextlevelreq_value"] = (10**(self.achievementData["cash"]["level"] +1) )*10
-        self.achievementData["cash"]["nextlevelreq"] = f"{ LongNumberToText((10**(self.achievementData["cash"]["level"] +1) )*10)} Cash"
-        self.achievementData["cash"]["last_level"] = (10**(self.achievementData["cash"]["level"] ) )*10
+        self.achievementData["cash"]["boost"] = f"X{self.achievementData["cash"]["level"]* 0.1 +1 } Cash"
+        self.achievementData["cash"]["nextlevelreq_value"] = (BigNumber(10)**(self.achievementData["cash"]["level"] +1) )*10
+        self.achievementData["cash"]["nextlevelreq"] = f"{ (BigNumber(10)**(self.achievementData["cash"]["level"] +1) )*10} Cash"
+        self.achievementData["cash"]["last_level"] = (BigNumber(10)**(self.achievementData["cash"]["level"] ) )*10
 
         #南度系列----------------------------------------------------------------------------------
         #最低的
         try:Effortlesses = self.screen.inventory.inventoryData["normalItem"]["Effortless"]
-        except : Effortlesses = 0
+        except : Effortlesses = BigNumber(0)
         self.achievementData["Effortless"]["now_value"] = Effortlesses
         self.achievementData["Effortless"]["now_state"] = f"" + Effortlesses.__repr__()
-        if Effortlesses <= 0 : self.achievementData["Effortless"]["level"] = 0
+        if Effortlesses <= 0 : self.achievementData["Effortless"]["level"] = BigNumber(0)
         else: self.achievementData["Effortless"]["level"] = int(Effortlesses.log(1.35)) - 15
-        if self.achievementData["Effortless"]["level"] <= 0 :self.achievementData["Effortless"]["level"]   = 0
-        self.achievementData["Effortless"]["boost"] = f"x {self.achievementData["Effortless"]["level"]* 0.1 +1 :.1f} Luck"
+        if self.achievementData["Effortless"]["level"] <= 0 :self.achievementData["Effortless"]["level"]   = BigNumber(0)
+        self.achievementData["Effortless"]["boost"] = f"x {self.achievementData["Effortless"]["level"]* 0.1 +1} Luck"
         self.achievementData["Effortless"]["nextlevelreq_value"] = BigNumber(1.35) ** (self.achievementData["Effortless"]["level"] +16)
         self.achievementData["Effortless"]["nextlevelreq"] = f"{ (BigNumber(1.35) ** (self.achievementData["Effortless"]["level"] +16)).__repr__(True)} Effortless"
         self.achievementData["Effortless"]["last_level"] =  BigNumber(1.35) ** (self.achievementData["Effortless"]["level"] + 15)
@@ -204,9 +204,9 @@ class Achievement:
             self.achievementData[item]["now_state"] = f"{c.__repr__(True)}"
             if c != 0:
                 self.achievementData[item]["level"] = c
-                if self.achievementData[item]["level"] <0 : self.achievementData[item]["level"] = 0
+                if self.achievementData[item]["level"] <0 : self.achievementData[item]["level"] = BigNumber(0)
             else:
-                self.achievementData[item]["level"] = 0
+                self.achievementData[item]["level"] = BigNumber(0)
             self.achievementData[item]["boost"] = f"X{(self.achievementData[item]["level"]* 0.2 +1) .__repr__(True)} {text[count -1]}"
             self.achievementData[item]["nextlevelreq_value"] = c +1
             self.achievementData[item]["nextlevelreq"] = f"{self.achievementData[item]["nextlevelreq_value"].__repr__(True)} {item}"
@@ -221,15 +221,15 @@ class Achievement:
             if item in inventoryData["normalItem"]:
                 c = inventoryData["normalItem"][item]
             else:
-                c = 0
+                c = BigNumber(0)
             count = text.index(item)
             self.achievementData[item]["now_value"] = c
             self.achievementData[item]["now_state"] = f"{c.__repr__()} {item}"
             if c != 0:
                 self.achievementData[item]["level"] = c
-                if self.achievementData[item]["level"] <0 : self.achievementData[item]["level"] = 0
+                if self.achievementData[item]["level"] <0 : self.achievementData[item]["level"] = BigNumber(0)
             else:
-                self.achievementData[item]["level"] = 0
+                self.achievementData[item]["level"] = BigNumber(0)
             self.achievementData[item]["boost"] = f"X{self.achievementData[item]["level"]* 5 +1 } {text[count -1]}"
             self.achievementData[item]["nextlevelreq_value"] = c +1
             self.achievementData[item]["nextlevelreq"] = f"{self.achievementData[item]["nextlevelreq_value"]} {item}"
@@ -238,7 +238,7 @@ class Achievement:
         
 
         # reset
-        self.totalLuckBoost = 1
+        self.totalLuckBoost = BigNumber(1)
 
         self.totalLuckBoost *= self.achievementData["roll"]["level"]* 0.1 +1
         self.totalLuckBoost *= self.achievementData["Effortless"]["level"] *0.1 +1

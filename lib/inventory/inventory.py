@@ -4,6 +4,7 @@ from config import *
 from lib.inventory.item import item
 from lib.inventory.itemUI import *
 from lib.functions.functions import LongNumberToText
+from lib.functions.bigNumber import BigNumber
 
 class inventory:
     def __init__(self,screen):
@@ -86,7 +87,7 @@ class inventory:
             upitem  = _item
 
         # cash
-        self.cash_boost = 1
+        self.cash_boost = BigNumber(1)
         self.cash_font = pygame.font.Font("./font/Ubuntu/Ubuntu-Bold.ttf",70)
         self.cash_font_height = self.cash_font.get_height() +10
         image = self.cash_font.render(f"${LongNumberToText(self.inventoryData["cash"])}",True,(53, 255, 107))
@@ -95,7 +96,7 @@ class inventory:
 
     def update(self):
         self.ItemUI.update()
-        self.cash_boost = 1
+        self.cash_boost = BigNumber(1)
         self.cash_boost *=( self.screen.Achievement.achievementData["cash"]["level"] *0.1 +1)
         self.cash_boost *= self.screen.upgrade.cashboost
 
@@ -123,4 +124,4 @@ class inventory:
         noboost_cash : 需要加成的
         boosted_cash : 以加成的
         """
-        self.inventoryData["cash"] += noboost_cash * self.cash_boost + boosted_cash
+        self.inventoryData["cash"] += (noboost_cash * self.cash_boost.to_int() + boosted_cash).to_int()

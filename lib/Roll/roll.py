@@ -6,12 +6,13 @@ from lib.Roll.rollbutton import *
 from lib.Roll.autoRollButton import  *
 from lib.functions.RateLimitedFunction import *
 from lib.functions.functions import format_to_two_decimal_places
+from lib.functions.bigNumber import BigNumber
 
 class roll:
     def __init__(self):
         self.rollList = []
         self.rollCounts = [0,0,0,0,0]
-        self.luckboost = 1
+        self.luckboost = BigNumber(1)
         for i in range(len(self.rollCounts)):#隨機起始值
             self.rollCounts[i] = random.randint(0,1023)
 
@@ -48,7 +49,7 @@ class roll:
             self.rollList[b] = c
 
     def roll(self):
-        rolled : int = 1
+        rolled : int = BigNumber(1)
         # 演算法: 先抽，洛維2048則在抽一次，可以倍增機率，最高可達2^50(約1000^5)
         for i in range(5):
             if self.rollCounts[i] >= 1023:
@@ -60,10 +61,10 @@ class roll:
 
             #if i !=0:print([get,i,rolled])
             rolled *= (1024^i)*get//1024
-            rolled = rolled //2
+            rolled = rolled /2
             if get != 2048:
                 break
-        rolled *= 2 * self.luckboost
+        rolled *= BigNumber(2) * self.luckboost
         return rolled
 
 class rollUI:
@@ -131,7 +132,7 @@ class rollUI:
 
     def update(self):
         # 處理所有的加成
-        self.baseLuckBoost = 1
+        self.baseLuckBoost = BigNumber(1)
         self.baseLuckBoost *= self.screen.Achievement.totalLuckBoost
         self.baseLuckBoost *= self.screen.upgrade.luckboost
         self.roll.luckboost = self.baseLuckBoost * self.screen.setting.ChangeLuckBoost.downLuck * self.testLuckboost
@@ -173,7 +174,7 @@ class rollUI:
             canRoll = self.screen.inventory.item_list[item].checkCanRoll()
             if get>itemluck and canRoll:
                 bestitem = item
-            if itemluck> get//2 and itemluck<=get and canRoll:
+            if itemluck> get/2 and itemluck<=get and canRoll:
                 rollitemlist.append(item)
 
         print((rollitemlist,get))
@@ -249,7 +250,7 @@ class rollAnimation:
                 best = ["common",2]
                 for item in self.item_list:
                     rarity = self.item_list[item].rarity
-                    if rarity<luck and rarity>luck//2:
+                    if rarity<luck and rarity>luck/2:
                         cangets.append(item)
                     elif rarity > best[1] and rarity <=luck:
                         best = [item,rarity]

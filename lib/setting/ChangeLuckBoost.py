@@ -3,6 +3,7 @@ from config import *
 import math
 
 from lib.GUI.button import Button
+from lib.functions.bigNumber import BigNumber
 
 class ChangeLuckBoost:
     def __init__(self,screen):
@@ -44,7 +45,7 @@ class ChangeLuckBoost:
 
             self.ItemGetBoost = abs(math.log10(self.downLuck) *-1 +1)
 
-            self.text = self.font.render(f"x{self.downLuck * luckboost:.2f} Luck , x{self.ItemGetBoost:.2f}item",False,(0,0,0))
+            self.text = self.font.render(f"x{BigNumber(self.downLuck) * luckboost} Luck , x{self.ItemGetBoost}item",False,(0,0,0))
             self.textrect = self.text.get_rect()
             self.textrect.center = (self.image_h*2+3 + self.textbg_size[0]//2,self.image_h//2)
 
