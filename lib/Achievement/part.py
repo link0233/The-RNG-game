@@ -1,6 +1,8 @@
 import pygame
 from config import *
 
+from lib.functions.bigNumber import BigNumber
+
 class part:
     def __init__(self,name : str, pos : int ,screen ):
         self.screen = screen
@@ -56,16 +58,38 @@ class part:
         boost = data["boost"]
         last  = data["last_level"]
         p_text = ""
+
+        #print(data["nextlevelreq_value"])
         
-        if data["nextlevelreq_value"]- last == 0:
+        if data["nextlevelreq_value"] == last :
             a = 1
             p_text = data["nextlevelreq"]
         elif data["nextlevelreq"] == "max":
             a = 1
             p_text = data["nextlevelreq"]
         else: 
-            a = (value - last) / (data["nextlevelreq_value"] - last)
-            p_text = f"{state} / {data["nextlevelreq"]}"
+            if last <0 : last = 0
+            if data["nextlevelreq_value"] <0 : data["nextlevelreq_value"] = 0
+            if isinstance(value, (int, float)):
+                if isinstance(data["nextlevelreq_value"], (int, float)):
+                    a = (value - last) / (data["nextlevelreq_value"] - last)
+                    p_text = f"{state} / {data["nextlevelreq"]}"
+                else:
+                    if isinstance(last, (int, float)):
+                        a = ((value - last)/ (data["nextlevelreq_value"] - last).to_int())
+                        p_text = f"{state} / {data["nextlevelreq"]}"
+                    elif isinstance(last, BigNumber):
+                        a = ((BigNumber(value) - last)/ (data["nextlevelreq_value"] - last).to_int())
+                        p_text = f"{state} / {data["nextlevelreq"]}"
+            if isinstance(value, (BigNumber)):
+                #print([isinstance(last, (BigNumber)),data["nextlevelreq_value"] , last])
+                try:
+                    a = ((value - last)/ (data["nextlevelreq_value"] - last)).to_int()
+                    p_text = f"{state} / {data["nextlevelreq"]}"
+                except:
+                    a = ((value.to_int() - last.to_int())/ last.to_int())
+                    p_text = f"{state} / {data["nextlevelreq"]}"
+            #print(a)
         if a<0: a = 0
         pygame.draw.rect(self.ProgressBar_image,(51, 101, 7),(30,10,self.ProgressBar_image_size[0] - 60 , self.ProgressBar_image_size[1] -20),border_radius= self.ProgressBar_image_size[1]//2 - 10)
         pygame.draw.rect(self.ProgressBar_image,(74, 207, 255),(30,10,(self.ProgressBar_image_size[0] - 60) * a , self.ProgressBar_image_size[1] -20),border_radius= self.ProgressBar_image_size[1]//2 - 10)

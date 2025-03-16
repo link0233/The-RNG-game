@@ -3,6 +3,7 @@ from config import *
 
 from lib.GUI.imageButton import *
 from lib.functions.functions import draw_text
+from lib.functions.bigNumber import BigNumber
 
 class item:
     def __init__(self,name:str , rarity: int ,rarity_count: int,image_path: str, item_type: str,screen):
@@ -23,8 +24,8 @@ class item:
         self.canRoll = True
         self.hover_state = False
         self.beside_show_state = False
-        self.boost = 1
-        self.Achievement_boost = 1
+        self.boost = BigNumber(1)
+        self.Achievement_boost = BigNumber(1)
 
         pygame.font.init()
         CourierNew = pygame.font.match_font("Tahoma")
@@ -35,6 +36,8 @@ class item:
         elif self.name == "10000roll" : self.caption = "You roll 10000 times !!!!!!!!!"
         elif self.name == "10Htimeplayed" : self.caption = "You played 10H in this game!!"
         elif self.name == "2025HappyNewYear" : self.caption = "Hatch it around 2025 new year!!"
+        elif self.name == "A lot of pi" : self.caption = "1e8 pi"
+        elif self.name == "The Real pi" : self.caption = "get all pi and a lot of pi"
 
         # 創建圖片
         self.rolled_image = pygame.image.load(image_path).convert_alpha()
@@ -328,11 +331,30 @@ class item:
             if self.name == "10Htimeplayed":
                 if self.screen.states.states["playtime"] >= 36000:
                     return True
+            if self.name == "A lot of pi":
+                if "pi" in self.screen.inventory.inventoryData["normalItem"]:
+                    if self.screen.inventory.inventoryData["normalItem"]["pi"] > BigNumber("1e8"):
+                        return True
+            if self.name == "The Real pi":
+                c = 0
+                if "pi" in self.screen.inventory.inventoryData["normalItem"]:
+                    if self.screen.inventory.inventoryData["normalItem"]["pi"] > BigNumber("1e13"):
+                        c +=1
+                if "3141" in self.screen.inventory.inventoryData["specialItem"]:
+                    if self.screen.inventory.inventoryData["specialItem"]["3141"] >= 1:
+                        c +=1
+                if "314159" in self.screen.inventory.inventoryData["specialItem"]:
+                    if self.screen.inventory.inventoryData["specialItem"]["314159"] >= 1:
+                        c +=1
+                if "31415926" in self.screen.inventory.inventoryData["specialItem"]:
+                    if self.screen.inventory.inventoryData["specialItem"]["31415926"] >= 1:
+                        c +=1
+                if c >= 4 : return True
             else :return False
         return False
 
     def get_boost(self):
-        return self.Achievement_boost * self.screen.setting.ChangeLuckBoost.ItemGetBoost
+        return (self.Achievement_boost * self.screen.setting.ChangeLuckBoost.ItemGetBoost)#.__repr__()
 
     def draw_rolled(self,movex = 0,movey = 0):
         show_rect = self.rolled_image.get_rect()
@@ -340,7 +362,7 @@ class item:
         show_rect.y = self.rolled_rect.y + movey
         self.screen.screen.blit(self.rolled_image,show_rect)
 
-    def draw_itemList(self,count:int ,get:bool ,move:int ):
+    def draw_itemList(self, count ,get:bool ,move:int ):
         """
         count: 數量
         get: 是否有取得
@@ -380,7 +402,10 @@ class item:
                 self.item_image.blit(self.rarity_image,self.rarity_rect)
 
                 #唯獨數量會變所以不能先設定
-                count_image = self.font.render(f"{count:.0f}",True,(0,0,0))
+                if isinstance(count , BigNumber):
+                    count_image = self.font.render(f"{count.__repr__(True)}",True,(0,0,0))
+                else:
+                    count_image = self.font.render(f"{count}",True,(0,0,0))
                 count_rect = count_image.get_rect()
                 count_rect.center = (self.item_name_image_w + self.rarity_image_w + self.count_w//2 ,self.item_image_h//2)
                 self.item_image.blit(count_image , count_rect)
@@ -549,32 +574,243 @@ class item:
             self.animation_showText("You rolled 10000times",210,Gradient = True , GradientTime= 30)
             self.animation_wait(50)
 
+        elif self.name == "3141":
+            self.animation_showText("3.141",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+            self.animation_showText("It's like pi but not pi",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+        
+        elif self.name == "314159":
+            self.animation_showText("3.14159",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+            self.animation_showText("It's closer to pi than 3.141",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+            self.animation_showText("But still far away",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+
+        elif self.name == "31415926":
+            self.animation_showText("3.1515926",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+            self.animation_showText("It's the closest to pi in special items",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+            self.animation_showText("But still far away, too",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+            self.animation_showText("Because pi have infinite Decimal Places",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+            self.animation_showText("Yeah , It's Disrespectful Number",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+            self.animation_showText("If you play more I fill you'll find real pi :)",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+            self.animation_showText(":P",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+            self.animation_showText("good luck",210,Gradient = True , GradientTime= 30)
+            self.animation_wait(50)
+
+        elif self.name == "A lot of pi":
+            self.animation_showText("oh",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh wow",50,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+
+            self.animation_showText("o",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh",20,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh y",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh yo",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh you",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh you ge",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh you get ",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh you get a ",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh you get a lo",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh you get a lot ",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh you get a lot of",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh you get a lot of p",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh you get a lot of pi",50,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+
+            self.animation_showText("y",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("ye",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("yea",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("yeah",50,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+
+            self.animation_showText("T",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("Th",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("Thi",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("This",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("This n",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("This no",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("This not",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("This not r",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("This not rea",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("This not real",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("This not real p",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("This not real pi",80,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+
+            self.animation_showText("b",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("bu",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("but",20,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("but a",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("but a l",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("but a lo",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("but a lot",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("but a lot :)",120,text_font="./font/Ubuntu/Ubuntu-Light.ttf" , Gradientout= True , GradientTime= 60)
+
+            self.animation_showText("As",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("As of",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("As of August",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("As of August 2021",30,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+
+            self.animation_showText("a",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("a team",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("a team of",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("a team of Swiss",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("a team of Swiss scientists",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("a team of Swiss scientists used",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("a team of Swiss scientists used a supercomputer",50,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+
+            self.animation_showText("to calculate",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("to calculate the value ",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("to calculate the value of pi (π)",10,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("to calculate the value of pi (π) to",50,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+
+            self.animation_showText("6",50,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62",20,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8",100,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 t",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 tr",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 tri",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 tril",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trill",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trilli",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillio",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillion",50,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillion d",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillion de",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillion dec",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillion deci",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillion decim",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillion decima",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillion decimal",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillion decimal p",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillion decimal pl",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillion decimal pla",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillion decimal plac",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillion decimal place",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("62.8 trillion decimal places",200,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+
+            self.animation_showText("setting",15,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("setting a",15,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("setting a new ",15,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("setting a new world ",15,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("setting a new world record",15,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("setting a new world record at the time.",200,text_font="./font/Ubuntu/Ubuntu-Light.ttf"  , Gradientout= True , GradientTime= 60)
+
+        elif self.name == "The Real pi":
+            self.animation_showText("o",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh m",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh my ",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh my g",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh my go",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("oh my god",50,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+
+            self.animation_showText("y",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("yo",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("you",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("you r",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("you re",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("you rea",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("you real",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("you real g",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("you real ge",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("you real get",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("you real get r",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("you real get re",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("you real get rea",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("you real get real",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("you real get real p",50,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("you real get real pi!",50,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+
+            self.animation_showText("n",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("no",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'l",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll s",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll sh",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll sho",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll show",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll show w",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll show wh",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll show wha",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll show what!",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll show what i",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll show what is!",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll show what is r",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll show what is re",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll show what is rea",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll show what is real",5,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll show what is real p",50,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_showText("now I'll show what is real pi!",50,text_font="./font/Ubuntu/Ubuntu-Light.ttf")
+
+            self.animation_image("./images/animations/The Real pi/1.png" , 300 ,imagefullscreen= True, Gradient= True , GradientTime= 100)
+            self.animation_image("./images/animations/The Real pi/2.png" , 300 ,imagefullscreen= True, Gradient= True , GradientTime= 100)
+            self.animation_image("./images/animations/The Real pi/3.png" , 300 ,imagefullscreen= True, Gradient= True , GradientTime= 100)
+            self.animation_image("./images/animations/The Real pi/4.png" , 300 ,imagefullscreen= True, Gradient= True , GradientTime= 100)
+            self.animation_image("./images/animations/The Real pi/5.png" , 300 ,imagefullscreen= True, Gradient= True , GradientTime= 100)
+            self.animation_image("./images/animations/The Real pi/6.png" , 300 ,imagefullscreen= True, Gradient= True , GradientTime= 100)
+            self.animation_image("./images/animations/The Real pi/7.png" , 300 ,imagefullscreen= True, Gradient= True , GradientTime= 100)
+            self.animation_image("./images/animations/The Real pi/8.png" , 300 ,imagefullscreen= True, Gradient= True , GradientTime= 100)
+            self.animation_image("./images/animations/The Real pi/9.png" , 300 ,imagefullscreen= True, Gradient= True , GradientTime= 100)
+            self.animation_image("./images/animations/The Real pi/10.jpg" , 300 ,imagefullscreen= True, Gradient= True , GradientTime= 100)
+            self.animation_image("./images/animations/The Real pi/11.jpg" , 300 ,imagefullscreen= True, Gradient= True , GradientTime= 100)
+
+            self.animation_showText(":)",200,text_font="./font/Ubuntu/Ubuntu-Light.ttf",Gradient= True , GradientTime= 30)
+ 
+            self.animation_type_text("Pi (π) is a mathematical constant" , 50  , "./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_type_text("that represents the ratio of a circle's circumference" , 50  , "./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_type_text("to its diameter." , 50  , "./font/Ubuntu/Ubuntu-Light.ttf")
+            self.animation_type_text("It is an irrational number" , 200  , "./font/Ubuntu/Ubuntu-Light.ttf" , 100 , True)
+
+    def animation_type_text(self , text ,endtime, font = "arial", GradientTime:int = 0 ,
+                           Gradientout : bool = False):
+        t = "" 
+        for at in text:
+            t += at
+            if t != text:
+                self.animation_showText(t , 5 , (255,255,255) , font , False , GradientTime , Gradientout )
+            else:
+                self.animation_showText(t , endtime , (255,255,255) , font , False , GradientTime , Gradientout )
+
     def animation_showText(self,text:str,time:int ,
                            text_color = (255,255,255),
+                           text_font = "arial",
                            Gradient:bool = False ,
-                           GradientTime:int = 0):
+                           GradientTime:int = 0 ,
+                           Gradientout : bool = False):
         """
         將會在正中間顯示文字
         text: 顯示的文字
         text_color : 文字顏色，預設為白色
-        time: 持續時間
+        time: 持續時間(tick)
         Gradient: 漸變特效
         GradientTime : 漸變特效持續時間
         """
-        textfont = pygame.font.match_font("arial")
-        textFont = pygame.font.Font(textfont,100)
+        if text_font == "arial":
+            text_font = pygame.font.match_font("arial")
+        textFont = pygame.font.Font(text_font,100)
         textimage = textFont.render(text,True,text_color)
         textRect = textimage.get_rect()
         textRect.center = (SCREENSIZEX//2,SCREENSIZEY//2)
         for t in range(time):
+                transparency = 255
                 if Gradient:
                     transparency = 255
                     #漸出
                     if t <= GradientTime:
                         transparency = t/GradientTime * 255
                     #中間
+                if Gradient:
                     if t >= GradientTime and t < time - GradientTime:
                         transparency = 255
+                if Gradient or Gradientout:
                     # 尾
                     if t >= time - GradientTime:
                         _t = t - (time-GradientTime)
@@ -586,6 +822,45 @@ class item:
                 self.screen.screen.fill((0,0,0))
                 self.screen.screen.blit(textimage,textRect)
                 self.UpdateScreenWhenPlayingAnimation()
+    
+    def animation_image(self,image_path:str , time:int,
+                        imagefullscreen:bool = False,
+                        Gradient:bool = False ,
+                        GradientTime:int = 0 ,
+                        Gradientout : bool = False):
+        image = pygame.image.load(image_path)
+        if imagefullscreen:
+            size = image.get_size()
+            if size[1] > size[0]:
+                a = self.screen.size[1] / size[1]
+                image = pygame.transform.smoothscale(image , (size[0] * a ,size[1] * a))
+            if size[0] > size[1]:
+                a = self.screen.size[0] / size[0]
+                image = pygame.transform.smoothscale(image , (size[0] * a ,size[1] * a))
+
+        rect = image.get_rect()
+        rect.center = (self.screen.size[0]//2 , self.screen.size[1]//2)
+        for t in range(time):
+            transparency = 255
+            if Gradient:
+                #漸出
+                if t <= GradientTime:
+                    transparency = t/GradientTime * 255
+                #中間
+            if Gradient:
+                if t >= GradientTime and t < time - GradientTime:
+                    transparency = 255
+            if Gradient or Gradientout:
+                # 尾
+                if t >= time - GradientTime:
+                    _t = t - (time-GradientTime)
+                    transparency = 255 - (_t/GradientTime)*255
+                #重新加載圖片後再做透明變化
+            di = image.copy()
+            di.set_alpha(transparency)
+            self.screen.screen.fill((0,0,0))
+            self.screen.screen.blit(di , rect)
+            self.UpdateScreenWhenPlayingAnimation()
     
     def animation_wait(self,time:int):
         """

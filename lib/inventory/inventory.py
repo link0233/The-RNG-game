@@ -42,6 +42,7 @@ class inventory:
             "Undemanding"     : item("Undemanding"     ,10000      ,14,"./images/items/Undemanding.png","normalItem",screen),
             "Fairly easy"     : item("Fairly easy"     ,30000      ,14,"./images/items/Fairly easy.png","normalItem",screen),
             "A bit difficult" : item("A bit difficult" ,50000      ,14,"./images/items/A bit difficult.png","normalItem",screen),
+            
             # 尚未啟用特出功能
             "Challenging"     : item("Challenging"     ,100000      ,14,"./images/items/Challenging.png","normalItem",screen),
             "Tough"           : item("Tough"           ,450000      ,14,"./images/items/Tough.png","normalItem",screen),
@@ -49,17 +50,28 @@ class inventory:
             "Demanding"       : item("Demanding"       ,1000000      ,14,"./images/items/Demanding.png","normalItem",screen),
             "Quite difficult" : item("Quite difficult" ,3000000      ,14,"./images/items/Quite difficult.png","normalItem",screen),
             "Hard"            : item("Hard"            ,5000000      ,14,"./images/items/Hard.png","normalItem",screen),
+            #  π 類
+            "pi"              : item("pi"              ,5         ,14,"./images/items/pi.png","normalItem",screen),
+            "hard pi"         : item("hard pi"         ,100       ,14,"./images/items/hard pi.png","normalItem",screen),
+            "insane pi"       : item("insane pi"       ,3141       ,14,"./images/items/insane pi.png","normalItem",screen),
+            "terrifying pi"   : item("terrifying pi"   ,314159      ,14,"./images/items/terrifying pi.png","normalItem",screen),
+            "impossible pi"   : item("impossible pi"   ,31415926       ,14,"./images/items/impossible pi.png","normalItem",screen),
 
             "1K"              : item("1K"              ,1000       ,0,"./images/items/1K.png","specialItem",screen),
             "CURV"            : item("CURV"            ,3200       ,2,"./images/items/CURV.png","specialItem",screen),
             "watermelon"      : item("watermelon"      ,22500      ,3,"./images/items/watermelon.png","specialItem",screen),
             "error-1"         : item("error-1"         ,451578     ,4,"./images/items/error-1.png","specialItem",screen),
             "666666"          : item("666666"          ,666666     ,5,"./images/items/666666.png","specialItem",screen),
+            "3141"            : item("3141"            ,3141     ,5,"./images/items/3141.png","specialItem",screen),
+            "314159"          : item("314159"          ,314159    ,5,"./images/items/314159.png","specialItem",screen),
+            "31415926"        : item("31415926"        ,31415926     ,5,"./images/items/31415926.png","specialItem",screen),
 
             "100roll"         : item("100roll"         ,0          ,0,"./images/items/100roll.png","extraItem",screen),
             "10Htimeplayed"   : item("10Htimeplayed"   ,0          ,1,"./images/items/10Htimeplayed.png","extraItem",screen),
             "10000roll"       : item("10000roll"       ,0          ,2,"./images/items/10000roll.png","extraItem",screen),
             "2025HappyNewYear": item("2025HappyNewYear",0          ,1,"./images/items/2025happynewyear.png","extraItem",screen),
+            "A lot of pi"     : item("A lot of pi"     ,0          ,1,"./images/items/A lot of pi.png","extraItem",screen),
+            "The Real pi"     : item("The Real pi"     ,0          ,1,"./images/items/The Real pi.png","extraItem",screen)
         }
         a = 0
         upitem = "common"

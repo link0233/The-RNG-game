@@ -68,6 +68,7 @@ class upgrade:
             "xp upgrade #5" : part(screen,(5,-1),"xp upgrade #5" , "It's boost your xp" , "$1000",["xp upgrade #4"],[["cash" , 1000]],"xp"),
             "xp upgrade #6" : part(screen,(6,-1),"xp upgrade #6" , "It's boost your xp" , "$5000",["xp upgrade #5"],[["cash" , 5000]],"xp"),
             "xp upgrade #7" : part(screen,(6,-2),"xp upgrade #7" , "It's boost your xp" , "$10m and 9e7 points",["xp upgrade #5" , "point upgrade #7"],[["cash" , 10_000_000] , ["point" , "9e7"]],"xp" , 10),
+            "xp upgrade #8" : part(screen,(11,-10),"xp upgrade #8" , "It's boost your xp" , "1e26 points",["unlock something #2" , "point upgrade #13"],[["point" , "1e26"]],"xp"),
 
             "unlock point" : part(screen,(4,-9),"unlock point" , "Unlock Point , point have a lot of upgrades , have fun ~" , "$2500",["xp upgrade #4"],[["cash" , 2500]],"point"),
             "point upgrade #1" : part(screen,(5,-10),"point upgrade #1" , "It's boost your point" , "10 * level+1 point",["unlock point"],[["point" , "10"]],"point" , 10),
@@ -81,6 +82,8 @@ class upgrade:
             "point upgrade #9" : part(screen,(7,-9),"point upgrade #9" , "It's boost your point" , "100000 point",["point upgrade #5"],[["point" , "1e5"]],"point"),
             "point upgrade #10" : part(screen,(8,-10),"point upgrade #10" , "It's boost your point" , "200000 point",["point upgrade #8"],[["point" , "2e5"]],"point"),
             "point upgrade #11" : part(screen,(9,-10),"point upgrade #11" , "It's boost your point" , "5e6 point",["point upgrade #10"],[["point" , "5e6"]],"point" , 20),
+            "point upgrade #12" : part(screen,(11,-8),"point upgrade #12" , "It's boost your point" , "3e15 point",["unlock something #1"],[["point" , "3e15"]],"point" , 20),
+            "point upgrade #13" : part(screen,(12,-8),"point upgrade #13" , "It's boost your point" , "5e20 point",["point upgrade #12"],[["point" , "5e20"]],"point" , 10),
 
             "f upgrade #1532" : part(screen,(10,-5),"f upgrade #1532" , "nothing" , "",["unlock something #3"],[["F" , "1"]],"F" , 1000),
 
@@ -242,6 +245,8 @@ class upgrade:
             self.xpboost *= 2
         if self.main_upgrades["xp upgrade #7"].bought:
             self.xpboost *= 20 * self.main_upgrades["xp upgrade #7"].level
+        if self.main_upgrades["xp upgrade #8"].bought:
+            self.xpboost *= 25 * self.main_upgrades["xp upgrade #8"].level
 
         # point
         if not self.main_upgrades["unlock point"].bought:
@@ -271,6 +276,10 @@ class upgrade:
             self.point_boost *= 3 * self.main_upgrades["point upgrade #10"].level
         if self.main_upgrades["point upgrade #11"].bought:
             self.point_boost *= 2 * self.main_upgrades["point upgrade #11"].level
+        if self.main_upgrades["point upgrade #12"].bought:
+            self.point_boost *= 2 * self.main_upgrades["point upgrade #12"].level
+        if self.main_upgrades["point upgrade #13"].bought:
+            self.point_boost *= 5 * self.main_upgrades["point upgrade #13"].level
 
         if self.main_upgrades["unlock something #1"].bought:
             self.screen.states.point.state_unlock = True

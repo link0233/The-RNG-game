@@ -137,6 +137,7 @@ class states:
         if "point" in data:
             for upgrade in data["point"]:
                 print(self.point.state_upgrades)
+                print(data["point"][upgrade])
                 self.point.state_upgrades[upgrade]["level"] = BigNumber(data["point"][upgrade])
 
         if "experience" in data:

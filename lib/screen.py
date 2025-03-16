@@ -114,20 +114,38 @@ class screen():
         with open("./saves/item.json","r") as f:
             inventoryData = json.load(f)
         #包含更興處理 item -> normal item
-        if "normalItem"  in inventoryData:    self.inventory.inventoryData["normalItem"]  = inventoryData["normalItem"]
-        elif "item"      in inventoryData:    self.inventory.inventoryData["normalItem"]  = inventoryData["item"]#優先選normalItem
-        if "specialItem" in inventoryData:    self.inventory.inventoryData["specialItem"] = inventoryData["specialItem"]
-        if "extraItem"   in inventoryData:    self.inventory.inventoryData["extraItem"]   = inventoryData["extraItem"]
+        if "normalItem"  in inventoryData:    
+            for name in inventoryData["normalItem"]:
+                self.inventory.inventoryData["normalItem"][name] = BigNumber(inventoryData["normalItem"][name])
+        elif "item"      in inventoryData:    
+            for name in inventoryData["item"]:
+                self.inventory.inventoryData["normalItem"][name] = BigNumber(inventoryData["item"][name])
+        if "specialItem" in inventoryData:
+            for name in inventoryData["specialItem"]:
+                self.inventory.inventoryData["specialItem"][name] = BigNumber(inventoryData["specialItem"][name])
+        if "extraItem"   in inventoryData:
+            for name in inventoryData["extraItem"]:
+                self.inventory.inventoryData["extraItem"][name] = BigNumber(inventoryData["extraItem"][name])
         if "cash"        in inventoryData:    self.inventory.inventoryData["cash"]        = inventoryData["cash"]
         # 活動限定處理
         if "specialItem" in inventoryData:
             if "2025HappyNewYear" in inventoryData["specialItem"]:
-                self.inventory.inventoryData["extraItem"]["2025HappyNewYear"] = 1
+                self.inventory.inventoryData["extraItem"]["2025HappyNewYear"] = BigNumber(1)
         print(inventoryData)
 
     def save(self):
         #物品存檔
         self.states.save()
         self.upgrade.save()
+
+        data = {"normalItem" : {} , "specialItem" : {} , "extraItem" : {}}
+        data["cash"] = self.inventory.inventoryData["cash"]
+        for d in self.inventory.inventoryData["normalItem"]:
+            data["normalItem"][d] = self.inventory.inventoryData["normalItem"][d].__repr__()
+        for d in self.inventory.inventoryData["specialItem"]:
+            data["specialItem"][d] = self.inventory.inventoryData["specialItem"][d].__repr__()
+        for d in self.inventory.inventoryData["extraItem"]:
+            data["extraItem"][d] = self.inventory.inventoryData["extraItem"][d].__repr__()
+
         with open("./saves/item.json","w") as f:
-            json.dump(self.inventory.inventoryData,f)
+            json.dump(data,f)
